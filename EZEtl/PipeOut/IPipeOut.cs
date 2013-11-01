@@ -7,7 +7,7 @@ namespace EZEtl.PipeOut
 {
     public interface IPipeOut : IDisposable
     {
-        Task ExecuteAsync();
+        /*Task*/ void ExecuteAsync();
         void WriteTableChunk(DataTable tableChunk);
     }
 }

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using EZEtl.PipeIn;
+﻿using EZEtl.PipeIn;
+using System;
 using System.Data;
-using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 using Utilities;
@@ -89,11 +87,5 @@ namespace EZEtl.PipeOut
                 
         }
 
-        //public override void Dispose()
-        //{
-          
-
-        //    base.Dispose();
-        //}
     }
 }

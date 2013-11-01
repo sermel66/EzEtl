@@ -14,7 +14,7 @@ namespace EZEtl
             string connectionString = @"Server=MELIKHOV-THINK\sqlexpress; Initial Catalog=TestAssignment; Integrated Security = True";
             string query = @"
 
-   SELECT TOP 10000
+   SELECT --TOP 10000
        [year]
       ,[StatePostalCode]
       ,[StateFipsCode]
@@ -40,8 +40,8 @@ FROM [dbo].[Census]";
 
                 PipeOut.FileCsvOutput wrt = new PipeOut.FileCsvOutput(rdr, @"C:\Temp\EzEtl\PipeOut.csv", @",", @"""");
 
-                Task task = Task.Run(() => wrt.ExecuteAsync());
-                Task.WaitAll(task);
+               /* Task task = Task.Run(() => */ wrt.ExecuteAsync()/*)*/;
+              /*  Task.WaitAll(task); */
                 wrt.Close();
             }
             catch ( Exception ex)

@@ -21,7 +21,7 @@ namespace EZEtl.PipeOut
             _inputModule = inputModule;
         }
 
-        public async Task ExecuteAsync()
+        public /*async Task*/ void ExecuteAsync()
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
@@ -34,10 +34,11 @@ namespace EZEtl.PipeOut
             {
 
                 DataTable processingTbl = inTbl;
-                Task chunkOutputTask = Task.Run(() => WriteTableChunk(processingTbl));
+                /*  Task chunkOutputTask = Task.Run(() => */
+                WriteTableChunk(processingTbl)/*)*/;
                 inTbl = _inputModule.ReadBatch();
 
-                await chunkOutputTask;
+               // await chunkOutputTask;
             }
 
         }
