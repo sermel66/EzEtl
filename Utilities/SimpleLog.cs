@@ -17,6 +17,10 @@ namespace Utilities
         static string _fqLogFilePath = string.Empty;
         public static bool IsInitialized { get { return !string.IsNullOrWhiteSpace(_fqLogFilePath); } }
         static SimpleLogEventType _maxLoggingVerbosity = SimpleLogEventType.Information; // also the default verbosity if one is not provided
+        public static SimpleLogEventType MaxLoggingVerbosity { get { return _maxLoggingVerbosity; } set { _maxLoggingVerbosity = value; } }
+
+        static SimpleLogEventType _maxLoggingConsoleVerbosity = SimpleLogEventType.None; // Duplicate on the console
+        public static SimpleLogEventType MaxLoggingConsoleVerbosity { get { return _maxLoggingConsoleVerbosity; } set { _maxLoggingConsoleVerbosity = value; } }
 
         public static void SetUpLog(string fqLogFilePath, SimpleLogEventType maxLoggingVerbosity, bool withThreading)
         {
@@ -38,10 +42,14 @@ namespace Utilities
             }
         }
 
+
         public static void ToLog(string message, SimpleLogEventType entryType)
         {
             if (!IsInitialized)
                 return;
+
+            if (entryType <= _maxLoggingConsoleVerbosity)
+                Console.WriteLine(message);
 
             if (entryType > _maxLoggingVerbosity)
                 return;

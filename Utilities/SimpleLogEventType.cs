@@ -24,5 +24,8 @@
         // Summary:
         //     A debug event. This can be used to e.g. output values of variables
         Debug = 16,
+
+
+        None = 32
     }
 }

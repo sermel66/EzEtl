@@ -43,9 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
-    <Compile Include="ConfigurationItem.cs" />
-    <Compile Include="ConfigurationValueType.cs" />
     <Compile Include="SimpleLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleLogEventType.cs" />
