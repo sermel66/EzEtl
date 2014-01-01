@@ -5,13 +5,13 @@ using System.Data.SqlClient;
 using System.Data;
 using Utilities;
 
-namespace EZEtl.PipeIn
+namespace EZEtl.Source
 {
-    public class SqlClientInput : PipelineInput
+    public class SqlClient : PipelineSource
     {
         SqlConnection _connection;
 
-        public SqlClientInput(
+        public SqlClient(
               int batchSize
             , string connectionString
             , string command

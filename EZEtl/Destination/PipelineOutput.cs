@@ -1,16 +1,16 @@
-﻿using EZEtl.PipeIn;
+﻿using EZEtl.Source;
 using System.Data;
 using System.Threading.Tasks;
 using Utilities;
 
-namespace EZEtl.PipeOut
+namespace EZEtl.Destination
 {
-    public abstract class PipelineOutput : IPipeOut
+    public abstract class PipelineDestination : IDestination
     {
-        IPipelineIn _inputModule;
-        protected IPipelineIn InputModule { get { return _inputModule; } }
+        ISource _inputModule;
+        protected ISource InputModule { get { return _inputModule; } }
 
-        public PipelineOutput(IPipelineIn inputModule)
+        public PipelineDestination(ISource inputModule)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 

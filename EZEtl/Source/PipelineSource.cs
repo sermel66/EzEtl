@@ -5,9 +5,9 @@ using System.Data;
 using EZEtl.Misc;
 using Utilities;
 
-namespace EZEtl.PipeIn
+namespace EZEtl.Source
 {
-    public abstract class PipelineInput : IPipelineIn
+    public abstract class PipelineSource : ISource
     {
         private int _batchSizeRows = 1024;
         private IDataReader _reader;
@@ -16,7 +16,7 @@ namespace EZEtl.PipeIn
         private DataTable _boilerPlateDataTable = new DataTable();
         protected DataTable NewDataTable { get { return _boilerPlateDataTable.Clone(); } }
 
-        public PipelineInput(int batchSize)
+        public PipelineSource(int batchSize)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 

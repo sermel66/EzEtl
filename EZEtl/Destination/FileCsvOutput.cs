@@ -1,4 +1,4 @@
-﻿using EZEtl.PipeIn;
+﻿using EZEtl.Source;
 using System;
 using System.Data;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Text;
 using Utilities;
 
 
-namespace EZEtl.PipeOut
+namespace EZEtl.Destination
 {
     public class FileCsvOutput : FileOutput
     {
@@ -22,7 +22,7 @@ namespace EZEtl.PipeOut
               
 
         public FileCsvOutput (
-             IPipelineIn inputModule
+             ISource inputModule
             ,string fqOutputPath
             ,string delimiter
             ,string textQualifier
