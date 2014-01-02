@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EzEtl>
+  <Base file="C:\Users\sergey\Source\Repos\EzEtl\Test\EzEtl_Common.xml" />
+  
+  <Variables>
+    <Variable name="BatchSizeRows" value="10000" />
+    <Variable name="TempFolder" value="${DataRoot}Temp\" />
+    <Variable name="DataRoot"  value="c:\temp\EzEtl\" />
+  </Variables>
+
+  <Modules>
+
+    <Module name="Upload" is_entry_point="false">
+      <Source type="FILE">
+
+        <SourceFolder>${DataRoot}\AdHoc</SourceFolder>
+        <FileNamePattern>SomeAdHoc_[Date]*.csv</FileNamePattern>
+        <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
+        <TempFolder>${TempFolder}</TempFolder>
+        <Encoding>utf-8</Encoding>
+        <TempFileEncoding>Unicode</TempFileEncoding>
+        <Expansion name="Date" 
+                   type="date_loop"
+                   format="yyyy-MM-dd"
+                   date_loop_query="dbo.StartDate"
+         />
+      </Source>
+
+      <Destination type="MSBULK">
+        <ConnectionString>MyLocalSql</ConnectionString>
+        <TimestampColumn>FeedDate</TimestampColumn>
+        <TableName>dbo.AdHoc</TableName>
+        <StoredProcedure>dbo.AdHocLoad</StoredProcedure>
+      </Destination>
+
+    </Module>
+
+    <Module name="Download" is_entry_point="true"  on_success="Upload" on_failure="Upload">
+      <Source type="SQL">
+        <ConnectionString>MyLocalSql</ConnectionString>
+        <Query>
+          SELECT [year]
+          ,[StatePostalCode]
+          ,[StateFipsCode]
+          ,[CountyFipsCode]
+          ,[Registry]
+          ,[RaceId]
+          ,[OriginId]
+          ,[SexId]
+          ,[AgeGroupId]
+          ,[Population]
+          FROM [dbo].[Census];
+        </Query>
+
+      </Source>
+      <Destination type="FILE">
+        <Path>${DataRoot}\AdHoc\SomeAdHoc_[ExtractDate].csv</Path>
+        <Expansion name="ExtractDate" type="utc_datetime" format="yyyy-MM-dd-HH-mm-ss" />
+        <Encoding>ASCII</Encoding>
+      </Destination>
+    </Module>
+
+  </Modules>
+
+</EzEtl>

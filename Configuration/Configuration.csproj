@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{887DDCD9-4AA1-47E6-B937-B215276FE3DD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Configuration</RootNamespace>
+    <AssemblyName>Configuration</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttributeNameEnum.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ConfigurationFile.cs" />
+    <Compile Include="ConfigurationException.cs" />
+    <Compile Include="Constant.cs" />
+    <Compile Include="Destination\DestinationTaskFactory.cs" />
+    <Compile Include="Destination\DestinationTaskTypeEnum.cs" />
+    <Compile Include="Destination\Destination.cs" />
+    <Compile Include="Destination\File.cs" />
+    <Compile Include="Destination\FileSettingEnum.cs" />
+    <Compile Include="Destination\DestinationSettingEnum.cs" />
+    <Compile Include="Destination\Msbulk.cs" />
+    <Compile Include="Destination\MsbulkSettingEnum.cs" />
+    <Compile Include="Setting\Expansion\Expansion.cs" />
+    <Compile Include="Setting\Expansion\ExpansionAttributeEnum.cs" />
+    <Compile Include="Setting\Expansion\ExpansionTypeEnum.cs" />
+    <Compile Include="Filter\ColumnMap.cs" />
+    <Compile Include="Filter\Filter.cs" />
+    <Compile Include="Filter\FilterTaskFactory.cs" />
+    <Compile Include="Filter\FilterTaskTypeEnum.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="Setting\ISetting.cs" />
+    <Compile Include="ReservedVariableEnum.cs" />
+    <Compile Include="Setting\SettingBase.cs" />
+    <Compile Include="Source\File.cs" />
+    <Compile Include="Source\FileSettingEnum.cs" />
+    <Compile Include="Source\Source.cs" />
+    <Compile Include="Source\SourceTaskFactory.cs" />
+    <Compile Include="Source\SourceTaskTypeEnum.cs" />
+    <Compile Include="Source\SQL.cs" />
+    <Compile Include="Task.cs" />
+    <Compile Include="TaskCategoryEnum.cs" />
+    <Compile Include="TaskFactory.cs" />
+    <Compile Include="Source\SourceSettingEnum.cs" />
+    <Compile Include="TopLevelItemEnum.cs" />
+    <Compile Include="Setting\Setting.cs" />
+    <Compile Include="Section.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
