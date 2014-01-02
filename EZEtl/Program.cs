@@ -31,7 +31,7 @@ namespace EZEtl
 
                 string configFilePath = string.Empty; // = @"C:\Users\sergey\Source\Repos\EzEtl\Test\AdHoc_take2.xml";
                 List<string> processedConfigFilePathList = null;
-                Configuration.Configuration configuration;
+                Configuration.ConfigurationFile configuration;
                 VerbosityLevel verbosityLevel = VerbosityLevel.Quiet;
                 DateTime dateIteratorFixedValue = DateTime.MinValue;
                 List<string> commandLineErrorMessages = new List<string>();
@@ -157,7 +157,7 @@ namespace EZEtl
 
                 // ============= End of Command Line, Begin Configuration =============
 
-                configuration = new Configuration.Configuration(configFilePath, processedConfigFilePathList);
+                Configuration.Configuration.Create(new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList));
                 string logName = @"c:\temp\ezetl.log"; // TODO
                 Utilities.SimpleLog.SetUpLog(logName,SimpleLogEventType.Trace,false);
                 switch ( verbosityLevel )
@@ -178,7 +178,7 @@ namespace EZEtl
 
                 Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);
 
-                Workflow.ProcessWorkflow(configuration);
+                Workflow.ProcessWorkflow();
 
                 //PipeIn.SqlClientInput rdr = new PipeIn.SqlClientInput(1024, connectionString, query, 500);
 

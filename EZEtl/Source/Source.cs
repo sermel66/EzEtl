@@ -7,7 +7,7 @@ using Utilities;
 
 namespace EZEtl.Source
 {
-    public abstract class PipelineSource : ISource
+    public abstract class Source : ISource
     {
         private int _batchSizeRows = 1024;
         private IDataReader _reader;
@@ -16,14 +16,24 @@ namespace EZEtl.Source
         private DataTable _boilerPlateDataTable = new DataTable();
         protected DataTable NewDataTable { get { return _boilerPlateDataTable.Clone(); } }
 
-        public PipelineSource(int batchSize)
+        public Source()
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            if (batchSize < 1)
-                throw new ArgumentOutOfRangeException("batchSize", "must be positive");
-
-            _batchSizeRows = batchSize;
+            string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
+            if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))
+            {
+                bool parseResult = Int32.TryParse(batchSizeVariableValue, out _batchSizeRows);
+                
+                 if (!parseResult || _batchSizeRows < 1)
+                 {
+                    throw new Configuration.ConfigurationException(
+                                "Value of the reserved variable " 
+                                + Configuration.ReservedVariableEnum.BatchSizeRows.ToString() 
+                                + " must be a positive integer"
+                                );
+                 }
+            }
         }
 
         public DataTable ReadBatch()

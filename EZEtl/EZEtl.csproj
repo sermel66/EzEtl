@@ -53,7 +53,7 @@
     <Compile Include="Misc\VerbosityLevel.cs" />
     <Compile Include="ProcessModule.cs" />
     <Compile Include="Source\ISource.cs" />
-    <Compile Include="Source\PipelineSource.cs" />
+    <Compile Include="Source\Source.cs" />
     <Compile Include="Source\SourceFactory.cs" />
     <Compile Include="Source\File.cs" />
     <Compile Include="Source\SqlClient.cs" />

@@ -7,7 +7,7 @@ using Utilities;
 
 namespace EZEtl.Source
 {
-    public class SqlClient : PipelineSource
+    public class SqlClient : Source
     {
         SqlConnection _connection;
 
@@ -17,7 +17,7 @@ namespace EZEtl.Source
             , string command
             , int commandTimeout
             )
-            : base(batchSize)
+            : base()
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 

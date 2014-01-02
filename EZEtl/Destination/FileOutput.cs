@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Data;
-using EZEtl.Source;
 using System.Threading.Tasks;
 using Utilities;
 
@@ -18,7 +17,7 @@ namespace EZEtl.Destination
 
         int _bufferSize = 1024 * 1024;
 
-        public FileOutput(ISource inputModule, string fqTargetFileName)
+        public FileOutput(Source.ISource inputModule, string fqTargetFileName)
             : base(inputModule)
         {
             if (string.IsNullOrWhiteSpace(fqTargetFileName))
