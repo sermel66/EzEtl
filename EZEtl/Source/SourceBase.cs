@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
+﻿using Configuration.Setting;
 using EZEtl.Misc;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using Utilities;
 
 namespace EZEtl.Source
 {
-    public abstract class Source : ISource
+    public abstract class SourceBase : ISource
     {
         private int _batchSizeRows = 1024;
         private IDataReader _reader;
@@ -15,8 +15,9 @@ namespace EZEtl.Source
 
         private DataTable _boilerPlateDataTable = new DataTable();
         protected DataTable NewDataTable { get { return _boilerPlateDataTable.Clone(); } }
+        protected Dictionary<ExpansionAttributeEnum, string> _expansionAttribute;
 
-        public Source()
+        public SourceBase(Configuration.Task task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
@@ -34,13 +35,18 @@ namespace EZEtl.Source
                                 );
                  }
             }
+
+            ISetting expansionSetting = (ISetting)task.Setting(Configuration.Source.SourceSettingEnum.Expansion.ToString()).Value;
+            if (expansionSetting != null)
+            {
+                _expansionAttribute = (Dictionary<ExpansionAttributeEnum, string>)expansionSetting.Value;
+            }
         }
 
         public DataTable ReadBatch()
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
-
-
+            
             DataTable batchTable = NewDataTable;
             int rowCount = 0;
             batchTable.BeginLoadData();
@@ -73,6 +79,14 @@ namespace EZEtl.Source
 
                 _boilerPlateDataTable.Columns.Add(col);
             }
+        }
+
+        protected virtual bool TryExpansion(string stringToExpand, out string expandedString)
+        {
+            bool succceeded = false;
+
+            expandedString = stringToExpand;
+            return succceeded;
         }
 
         public virtual void Dispose()

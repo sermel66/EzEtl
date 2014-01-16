@@ -2,7 +2,7 @@
 {
     public enum FileSettingEnum
     {
-         Path
+         PathName
         ,Encoding
         ,Delimiter
         ,TextQualifier

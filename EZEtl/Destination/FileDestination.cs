@@ -7,7 +7,7 @@ using Utilities;
 
 namespace EZEtl.Destination
 {
-    public abstract class FileOutput : PipelineDestination
+    public abstract class FileDestination : DestinationBase
     {
         string _fqTempFile;
         string _fqTargetFile;
@@ -17,13 +17,15 @@ namespace EZEtl.Destination
 
         int _bufferSize = 1024 * 1024;
 
-        public FileOutput(Source.ISource inputModule, string fqTargetFileName)
-            : base(inputModule)
+        public FileDestination(Source.ISource source, Configuration.Task task)
+            : base(source)
         {
-            if (string.IsNullOrWhiteSpace(fqTargetFileName))
-                throw new ArgumentNullException("fqTargetFileName");
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (task == null)
+                throw new ArgumentNullException("task");
 
-            _fqTargetFile = fqTargetFileName;
+            _fqTargetFile = (string)task.Setting( Configuration.Destination.FileSettingEnum.PathName.ToString() ).Value;
             string targetFileFolder = Path.GetDirectoryName(_fqTargetFile);
             _fqTempFile = System.IO.Path.Combine(targetFileFolder, Path.GetRandomFileName());
 

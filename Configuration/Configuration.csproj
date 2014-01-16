@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationFile.cs" />
     <Compile Include="ConfigurationException.cs" />
+    <Compile Include="ConnectionString\ConnectionString.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="Destination\DestinationTaskFactory.cs" />
     <Compile Include="Destination\DestinationTaskTypeEnum.cs" />

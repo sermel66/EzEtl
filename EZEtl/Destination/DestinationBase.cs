@@ -5,20 +5,20 @@ using Utilities;
 
 namespace EZEtl.Destination
 {
-    public abstract class PipelineDestination : IDestination
+    public abstract class DestinationBase : IDestination
     {
-        ISource _inputModule;
-        protected ISource InputModule { get { return _inputModule; } }
+        ISource _inputTask;
+        protected ISource InputTask { get { return _inputTask; } }
 
-        public PipelineDestination(ISource inputModule)
+        public DestinationBase(ISource inputTask)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
 
-            if (inputModule == null)
-                throw new System.ArgumentNullException("inputModule");
+            if (inputTask == null)
+                throw new System.ArgumentNullException("inputTask");
 
-            _inputModule = inputModule;
+            _inputTask = inputTask;
         }
 
         public /*async Task*/ void ExecuteAsync()
@@ -26,7 +26,7 @@ namespace EZEtl.Destination
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
 
-            DataTable inTbl = _inputModule.ReadBatch();
+            DataTable inTbl = _inputTask.ReadBatch();
         
             SimpleLog.ToLog("inTbl.Rows.Count=" + inTbl.Rows.Count.ToString(), SimpleLogEventType.Debug);
 
@@ -36,7 +36,7 @@ namespace EZEtl.Destination
                 DataTable processingTbl = inTbl;
                 /*  Task chunkOutputTask = Task.Run(() => */
                 WriteTableChunk(processingTbl)/*)*/;
-                inTbl = _inputModule.ReadBatch();
+                inTbl = _inputTask.ReadBatch();
 
                // await chunkOutputTask;
             }

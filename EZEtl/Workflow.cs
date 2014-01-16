@@ -14,6 +14,7 @@ namespace EZEtl
           Module module = Configuration.Configuration.Module(Configuration.Configuration.EntryPointModuleName);
 
            ProcessModule pm = new ProcessModule(module);
+           pm.DestinationTask.ExecuteAsync();
         }
     }
 }

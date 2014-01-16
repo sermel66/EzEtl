@@ -115,7 +115,12 @@ namespace Configuration
             foreach (XElement item in _body.Descendants())
             {
                 string itemName = item.Name.LocalName;
-                string itemValue = item.Value;
+                string itemValue = string.Empty;
+
+                if (item.HasAttributes || item.HasElements)
+                    itemValue = item.ToString();
+                else if (!item.IsEmpty)
+                    itemValue = item.Value;
 
                 if (_settings.ContainsKey(itemName))
                 {

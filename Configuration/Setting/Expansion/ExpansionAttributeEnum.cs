@@ -1,4 +1,4 @@
-﻿namespace Configuration
+﻿namespace Configuration.Setting
 {
     public enum ExpansionAttributeEnum
     {

@@ -28,10 +28,10 @@ namespace Configuration.Setting
         
         public Expansion(ISetting setting)
         {
-            if (setting == null || !setting.IsValid)
+            if (setting == null) // || !setting.IsValid)
                 throw new ArgumentNullException("Argument setting is NULL or invalid");
 
-            _expansionXml = (XElement)setting.Value;
+         //   _expansionXml = (XElement)setting.RawValue;
            
             ExpansionAttributeEnum attributeName;
             string unexpectedAttributes = string.Empty;

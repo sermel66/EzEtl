@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,18 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Destination\DestinationFactory.cs" />
+    <Compile Include="Misc\EZEtlException.cs" />
     <Compile Include="Misc\SchemaTableColumnsEnum.cs" />
     <Compile Include="Misc\VerbosityLevel.cs" />
     <Compile Include="ProcessModule.cs" />
     <Compile Include="Source\ISource.cs" />
-    <Compile Include="Source\Source.cs" />
+    <Compile Include="Source\SourceBase.cs" />
     <Compile Include="Source\SourceFactory.cs" />
     <Compile Include="Source\File.cs" />
     <Compile Include="Source\SqlClient.cs" />
-    <Compile Include="Destination\FileCsvOutput.cs" />
-    <Compile Include="Destination\FileOutput.cs" />
+    <Compile Include="Destination\FileCsv.cs" />
+    <Compile Include="Destination\FileDestination.cs" />
     <Compile Include="Destination\IDestination.cs" />
-    <Compile Include="Destination\PipelineOutput.cs" />
+    <Compile Include="Destination\DestinationBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workflow.cs" />
@@ -76,7 +79,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

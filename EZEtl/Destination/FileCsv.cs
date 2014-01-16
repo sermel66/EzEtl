@@ -8,12 +8,12 @@ using Utilities;
 
 namespace EZEtl.Destination
 {
-    public class FileCsvOutput : FileOutput
+    public class FileCsv : FileDestination
     {
-    
-        string _delimiter;
 
-        string _textQualifier;
+        string _delimiter = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+
+        string _textQualifier = @"""";
         private string _textQualifierSubstitute;
 
         bool _isHeaderOutput = false;
@@ -21,21 +21,21 @@ namespace EZEtl.Destination
         System.Text.Encoding _outputEncoding = Encoding.Default;
               
 
-        public FileCsvOutput (
-             ISource inputModule
-            ,string fqOutputPath
-            ,string delimiter
-            ,string textQualifier
-            ) : base ( inputModule, fqOutputPath )
+        public FileCsv (
+             ISource source
+            ,Configuration.Task task
+            )
+            : base(source, task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             
-            if (string.IsNullOrEmpty(delimiter))
-                throw new System.ArgumentNullException("delimiter");
-         
-            _delimiter = delimiter;
-            _textQualifier = textQualifier;
-            _textQualifierSubstitute = textQualifier + textQualifier;
+            if (string.IsNullOrEmpty((string)task.Setting( Configuration.Destination.FileSettingEnum.Delimiter.ToString() ).Value))
+                _delimiter = (string)task.Setting(Configuration.Destination.FileSettingEnum.Delimiter.ToString()).Value;
+            
+            if (string.IsNullOrEmpty((string)task.Setting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value))
+                _textQualifier = (string)task.Setting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value;
+             
+            _textQualifierSubstitute = _textQualifier + _textQualifier;
 
             _sw = new StreamWriter(base.OutputStream, _outputEncoding);
 

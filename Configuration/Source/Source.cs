@@ -9,7 +9,13 @@ namespace Configuration.Source
     public abstract class Source : Task
     {
         ISetting _expansion;
-        public ISetting Setting(SourceSettingEnum sourceSetting) { return this.Setting(sourceSetting.ToString()); }
+        public ISetting Setting(SourceSettingEnum sourceSetting) {
+            if (sourceSetting == SourceSettingEnum.Expansion)
+                return _expansion;
+
+            throw new ConfigurationException("Unsupported SourceSettingEnum value " + sourceSetting.ToString());
+            
+            }
 
         public Source(TaskCategoryEnum taskCategory, XElement item)
             : base(taskCategory, item)
@@ -25,7 +31,8 @@ namespace Configuration.Source
 
             if (this.ConfiguredSettings.Contains(SourceSettingEnum.Expansion.ToString()))
             {
-                _expansion = new Expansion(this.Setting(SourceSettingEnum.Expansion));
+                ISetting expansionSetting = this.Setting(SourceSettingEnum.Expansion.ToString()); // overload taking string must be used here
+                _expansion = new Expansion(expansionSetting);
 
                 this._warnings += "Expansion:" + _expansion.WarningMessage + Constant.UserMessageSentenceDelimiter;
 
