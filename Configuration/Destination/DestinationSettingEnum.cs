@@ -2,9 +2,9 @@
 {
     public enum DestinationSettingEnum
     {
-         Expansion
-        ,TimestampColumn
-        ,TableName
-        ,StoredProcedure
+      //   Expansion
+         TimestampColumn
+        ,OneDebugMessagePerBatchCount
+        ,ExistingDataAction
     }
 }

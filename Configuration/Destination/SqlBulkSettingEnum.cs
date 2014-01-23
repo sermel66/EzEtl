@@ -1,6 +1,6 @@
 ﻿namespace Configuration.Destination
 {
-    public enum MsbulkSettingEnum
+    public enum SqlBulkSettingEnum
     {
         ConnectionString
     }

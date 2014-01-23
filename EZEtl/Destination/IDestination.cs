@@ -9,5 +9,6 @@ namespace EZEtl.Destination
     {
         /*Task*/ void ExecuteAsync();
         void WriteTableChunk(DataTable tableChunk);
+        void Close();
     }
 }

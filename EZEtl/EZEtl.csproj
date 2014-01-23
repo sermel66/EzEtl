@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Destination\DestinationFactory.cs" />
+    <Compile Include="Destination\SqlBulkDestination.cs" />
     <Compile Include="Misc\EZEtlException.cs" />
     <Compile Include="Misc\SchemaTableColumnsEnum.cs" />
     <Compile Include="Misc\VerbosityLevel.cs" />

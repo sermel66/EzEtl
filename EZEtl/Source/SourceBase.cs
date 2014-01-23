@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Utilities;
+using Configuration.Source;
 
 namespace EZEtl.Source
 {
@@ -15,37 +16,39 @@ namespace EZEtl.Source
 
         private DataTable _boilerPlateDataTable = new DataTable();
         protected DataTable NewDataTable { get { return _boilerPlateDataTable.Clone(); } }
-        protected Dictionary<ExpansionAttributeEnum, string> _expansionAttribute;
+   //     protected Dictionary<ExpansionAttributeEnum, string> _expansionAttribute;
 
         public SourceBase(Configuration.Task task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
-            if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))
-            {
-                bool parseResult = Int32.TryParse(batchSizeVariableValue, out _batchSizeRows);
-                
-                 if (!parseResult || _batchSizeRows < 1)
-                 {
-                    throw new Configuration.ConfigurationException(
-                                "Value of the reserved variable " 
-                                + Configuration.ReservedVariableEnum.BatchSizeRows.ToString() 
-                                + " must be a positive integer"
-                                );
-                 }
-            }
+            _batchSizeRows = (int)task.Setting(SourceSettingEnum.BatchSizeRows.ToString()).Value;
 
-            ISetting expansionSetting = (ISetting)task.Setting(Configuration.Source.SourceSettingEnum.Expansion.ToString()).Value;
-            if (expansionSetting != null)
-            {
-                _expansionAttribute = (Dictionary<ExpansionAttributeEnum, string>)expansionSetting.Value;
-            }
+            //string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
+            //if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))
+            //{
+            //    bool parseResult = Int32.TryParse(batchSizeVariableValue, out _batchSizeRows);
+                
+            //     if (!parseResult || _batchSizeRows < 1)
+            //     {
+            //        throw new Configuration.ConfigurationException(
+            //                    "Value of the reserved variable " 
+            //                    + Configuration.ReservedVariableEnum.BatchSizeRows.ToString() 
+            //                    + " must be a positive integer"
+            //                    );
+            //     }
+            //}
+
+            //ISetting expansionSetting = (ISetting)task.Setting(Configuration.Source.SourceSettingEnum.Expansion.ToString()).Value;
+            //if (expansionSetting != null)
+            //{
+            //    _expansionAttribute = (Dictionary<ExpansionAttributeEnum, string>)expansionSetting.Value;
+            //}
         }
 
         public DataTable ReadBatch()
         {
-            SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
+         //   SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             
             DataTable batchTable = NewDataTable;
             int rowCount = 0;
@@ -72,9 +75,10 @@ namespace EZEtl.Source
             {
                 DataColumn col = new DataColumn();
                 col.ColumnName = row[SchemaTableColumnsEnum.ColumnName.ToString()].ToString();
-                string colTypeName = row[SchemaTableColumnsEnum.DataTypeName.ToString()].ToString();
+             //   string colTypeName = row[SchemaTableColumnsEnum.DataTypeName.ToString()].ToString();
                 col.DataType = (Type) row[SchemaTableColumnsEnum.DataType.ToString()];
-                if (colTypeName.Contains( "char" ))
+                string colTypeName = col.DataType.ToString();
+                if (colTypeName.Contains( "String" ))
                     col.MaxLength = (int) row[SchemaTableColumnsEnum.ColumnSize.ToString()];
 
                 _boilerPlateDataTable.Columns.Add(col);

@@ -6,7 +6,7 @@ using Configuration.Setting;
 
 namespace Configuration.Source
 {
-    public class File : Source
+    public class File : SourceTask
     {
         public File(TaskCategoryEnum taskCategory, XElement item)
             : base(taskCategory, item)

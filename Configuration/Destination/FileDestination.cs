@@ -6,9 +6,9 @@ using Configuration.Setting;
 
 namespace Configuration.Destination
 {
-    public class File : Destination
+    public class FileDestination : DestinationTask
     {
-        public File(TaskCategoryEnum taskCategory, XElement item)
+        public FileDestination(TaskCategoryEnum taskCategory, XElement item)
             : base(taskCategory, item)
         {
             foreach (FileSettingEnum settingName in Enum.GetValues(typeof(FileSettingEnum)))

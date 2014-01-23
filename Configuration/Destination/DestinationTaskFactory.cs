@@ -21,9 +21,9 @@ namespace Configuration.Destination
             switch (taskType)
             {
                 case DestinationTaskTypeEnum.FILE:
-                    return new File(taskCategory, item);
-                case DestinationTaskTypeEnum.MSBULK:
-                    return new Msbulk(taskCategory, item);
+                    return new FileDestination(taskCategory, item);
+                case DestinationTaskTypeEnum.SQLBULK:
+                    return new SqlBulkDestination(taskCategory, item);
                 default:
                     throw new ConfigurationException("Unsupported Destination Task Type [" + taskType.ToString() + "]");
             }

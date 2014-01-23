@@ -2,6 +2,7 @@
 {
     public enum SourceSettingEnum
     {
-        Expansion
+         Expansion
+        ,BatchSizeRows
     }
 }

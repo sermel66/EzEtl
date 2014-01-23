@@ -2,8 +2,8 @@
 {
     public enum DestinationTaskTypeEnum
     {
-        FILE,
-        MSBULK
-        
+        UNKNOWN = 0,
+        FILE    = 1,
+        SQLBULK = 2
     }
 }

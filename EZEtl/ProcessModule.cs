@@ -81,7 +81,7 @@ namespace EZEtl
                         throw new EZEtlException("Filter not implemented yet");
                         break;
                     case TaskCategoryEnum.Destination:
-                        _destinationTask = Destination.DestinationFactory.CreateDestination(wrappedSource, task);
+                        _destinationTask = Destination.DestinationFactory.CreateDestination(wrappedSource, (Configuration.Destination.DestinationTask) task);
                         break;
                     default:
                         throw new EZEtlException("Unexpected TaskCategory " + category.ToString());

@@ -18,10 +18,8 @@ namespace EZEtl.Destination
         int _bufferSize = 1024 * 1024;
 
         public FileDestination(Source.ISource source, Configuration.Task task)
-            : base(source)
+            : base(source, task)
         {
-            if (source == null)
-                throw new ArgumentNullException("source");
             if (task == null)
                 throw new ArgumentNullException("task");
 
@@ -32,7 +30,7 @@ namespace EZEtl.Destination
             _outputStream = new System.IO.FileStream(_fqTempFile, FileMode.Create, FileAccess.Write, FileShare.None, _bufferSize);
         }
         
-        public virtual void Close()
+        public override void Close()
         {
             _outputStream.Close();
 

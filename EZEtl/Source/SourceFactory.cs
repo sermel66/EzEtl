@@ -18,6 +18,10 @@ namespace EZEtl.Source
                     result = new EZEtl.Source.File(task);
                     break;
 
+                case "SQL":
+                    result = new EZEtl.Source.SqlClient(task);
+                    break;
+
 
                 default:
                     throw new Configuration.ConfigurationException("Unexpected Source type [" + task.Type + "]");

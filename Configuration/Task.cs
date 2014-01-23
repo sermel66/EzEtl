@@ -126,22 +126,25 @@ namespace Configuration
                 {
                     _settings[itemName].RawValue = itemValue;
                     if (!String.IsNullOrWhiteSpace(_settings[itemName].ErrorMessage))
-                    {                     
+                    {
                         _errorCount++;
                     }
+
+                    if (_settingCount.ContainsKey(itemName))
+                    {
+                        _settingCount[itemName]++;
+                    }
+                    else
+                        _settingCount.Add(itemName, 1);
                 }
                 else
+                {
                     if (!_unexpectedSettings.Contains(itemName))
                     {
-                        _unexpectedSettings.Add(itemName);                     
+                        _unexpectedSettings.Add(itemName);
                     }
 
-                if (_settingCount.ContainsKey(itemName))
-                {
-                    _settingCount[itemName]++;                 
                 }
-                else
-                    _settingCount.Add(itemName, 1);
 
             }
 

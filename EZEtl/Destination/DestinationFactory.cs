@@ -7,19 +7,24 @@ namespace EZEtl.Destination
 {
     public static class DestinationFactory
     {
-        public static IDestination CreateDestination(Source.ISource source, Configuration.Task task)
+        public static IDestination CreateDestination(Source.ISource source, Configuration.Destination.DestinationTask task)
         {
             IDestination result = null;
 
-            switch (task.Type)
+            switch (task.DestinationTaskType)
             {
-                case "FILE":
+                case Configuration.Destination.DestinationTaskTypeEnum.FILE:
                     result = new EZEtl.Destination.FileCsv(source, task);
                     break;
 
+                case Configuration.Destination.DestinationTaskTypeEnum.SQLBULK:
+                    result = new EZEtl.Destination.SqlBulkDestination(source, task);
+                    break;
 
                 default:
-                    throw new Configuration.ConfigurationException("Unexpected Source type [" + task.Type + "]");
+                    throw new Configuration.ConfigurationException("Unexpected Destination type [" + task.Type + "] DestinationTaskTypeEnum=["
+                        + task.DestinationTaskType.ToString() + "]"
+                        );
 
             }
 

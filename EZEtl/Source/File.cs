@@ -4,6 +4,7 @@ using System.Text;
 using System.Data.OleDb;
 using System.Data;
 using Utilities;
+using System.Configuration;
 
 namespace EZEtl.Source
 {
@@ -33,7 +34,7 @@ namespace EZEtl.Source
             string actualFolder = string.IsNullOrWhiteSpace(_tempFolder) ? System.IO.Path.GetDirectoryName(_filePathPattern) : _tempFolder;
             string actualFileName = System.IO.Path.GetFileName(_filePathPattern); // TODO implement expansion and globs
 
-            System.Configuration.ConnectionStringSettings cs = Configuration.ConnectionString.ConnectionString.GetConnectionString(ConnectionStringTemplateName);
+            System.Configuration.ConnectionStringSettings cs = ConfigurationManager.ConnectionStrings[ConnectionStringTemplateName];
             if (cs == null)
                 throw new Configuration.ConfigurationException("Connection string template " + ConnectionStringTemplateName + " is not found in the application .config file");
 
@@ -46,6 +47,7 @@ namespace EZEtl.Source
             Utilities.SimpleLog.ToLog("Query: " + query, SimpleLogEventType.Debug);
 
             _connection = new OleDbConnection(connectionString);
+            _connection.Open();
             OleDbCommand cmd = _connection.CreateCommand();
             cmd.CommandText = query;
             cmd.CommandType = CommandType.Text;
