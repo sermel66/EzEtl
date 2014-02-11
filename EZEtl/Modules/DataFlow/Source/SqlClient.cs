@@ -11,7 +11,7 @@ namespace EZEtl.Source
     {
         SqlConnection _connection;
 
-        public SqlClient(Configuration.Task task) : base(task)
+        public SqlClient(Configuration.TaskConfiguration task) : base(task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 

@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Data;
 using Utilities;
 using System.Configuration;
+using EZEtl.Configuration;
 
 namespace EZEtl.Source
 {
@@ -21,15 +22,15 @@ namespace EZEtl.Source
         string _tempFolder = string.Empty;
         Encoding _encoding = Encoding.Default;
         Encoding _tempFileEncoding = Encoding.ASCII;
-        Configuration.Setting.ISetting _expansion = null;
-        
-        public File(Configuration.Task task) : base(task)
+     
+        public File(ITaskConfiguration task)
+            : base(task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            _filePathPattern = (string)task.Setting(Configuration.Source.FileSettingEnum.FilePathPattern.ToString()).Value;
-            _schemaIniTemplate = (string)task.Setting(Configuration.Source.FileSettingEnum.SchemaIniTemplate.ToString()).Value;
-            _tempFolder = (string)task.Setting(Configuration.Source.FileSettingEnum.TempFolder.ToString()).Value;
+            _filePathPattern = (string)task.GetSetting(SettingNameEnum.FilePathPattern).Value;
+            _schemaIniTemplate = (string)task.GetSetting(SettingNameEnum.SchemaIniTemplate).Value;
+            _tempFolder = (string)task.GetSetting(SettingNameEnum.TempFolder).Value;
 
             string actualFolder = string.IsNullOrWhiteSpace(_tempFolder) ? System.IO.Path.GetDirectoryName(_filePathPattern) : _tempFolder;
             string actualFileName = System.IO.Path.GetFileName(_filePathPattern); // TODO implement expansion and globs

@@ -50,30 +50,94 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Destination\DestinationFactory.cs" />
-    <Compile Include="Destination\SqlBulkDestination.cs" />
+    <Compile Include="Configuration\Misc\AttributeNameEnum.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\ConfigurationFile.cs" />
+    <Compile Include="Configuration\Misc\ConfigurationException.cs" />
+    <Compile Include="Configuration\Misc\ConfigurationParentBase.cs" />
+    <Compile Include="Configuration\Misc\Constant.cs" />
+    <Compile Include="Configuration\Misc\Diagnostics.cs" />
+    <Compile Include="Configuration\Misc\ExistingDataActionEnum.cs" />
+    <Compile Include="Configuration\Misc\IDiagnosable.cs" />
+    <Compile Include="Configuration\Misc\IConfigurationParent.cs" />
+    <Compile Include="Configuration\Misc\MessageSeverityEnum.cs" />
+    <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
+    <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
+    <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
+    <Compile Include="Configuration\Setting\ExpectedSetting.cs" />
+    <Compile Include="Configuration\Setting\ISetting.cs" />
+    <Compile Include="Configuration\TaskConfiguration\ITaskConfiguration.cs" />
+    <Compile Include="Modules\CompositeModule.cs" />
+    <Compile Include="Modules\DataFlow\DataFlowModule.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Configuration\ModuleConfiguration\Module.cs" />
+    <Compile Include="Configuration\Setting\Setting.cs" />
+    <Compile Include="Configuration\Setting\SettingBase.cs" />
+    <Compile Include="Configuration\TaskConfiguration\TaskConfiguration.cs" />
+    <Compile Include="Configuration\Misc\DataFlowStepEnum.cs" />
+    <Compile Include="Configuration\TaskConfiguration\TaskFactory.cs" />
+    <Compile Include="Configuration\TopLevelItemEnum.cs" />
+    <Compile Include="Configuration\Variables\IVariable.cs" />
+    <Compile Include="Configuration\Variables\ReservedVariableEnum.cs" />
+    <Compile Include="Configuration\Variables\SupportedVariableTypeEnum.cs" />
+    <Compile Include="Configuration\Variables\Variable.cs" />
+    <Compile Include="Configuration\Variables\VariableFactory.cs" />
     <Compile Include="Misc\EZEtlException.cs" />
     <Compile Include="Misc\SchemaTableColumnsEnum.cs" />
     <Compile Include="Misc\VerbosityLevel.cs" />
-    <Compile Include="ProcessModule.cs" />
-    <Compile Include="Source\ISource.cs" />
-    <Compile Include="Source\SourceBase.cs" />
-    <Compile Include="Source\SourceFactory.cs" />
-    <Compile Include="Source\File.cs" />
-    <Compile Include="Source\SqlClient.cs" />
-    <Compile Include="Destination\FileCsv.cs" />
-    <Compile Include="Destination\FileDestination.cs" />
-    <Compile Include="Destination\IDestination.cs" />
-    <Compile Include="Destination\DestinationBase.cs" />
+    <Compile Include="Modules\DataFlow\DataFlowProcess.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\DestinationBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\DestinationFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\FileCsv.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\FileDestination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\IDestination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Destination\SqlBulkDestination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Source\File.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Source\ISource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Source\SourceBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Source\SourceFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DataFlow\Source\SqlClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\ModuleFactory.cs" />
+    <Compile Include="Modules\SimpleModule.cs" />
+    <Compile Include="Modules\SqlExec\SqlArgumentSetting.cs" />
+    <Compile Include="Modules\SqlExec\SqlExecModule.cs" />
+    <Compile Include="Modules\SqlExec\SqlQuerySetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Workflow.cs" />
+    <Compile Include="Workflow\ExecuteModule.cs" />
+    <Compile Include="Workflow\OperatorBase.cs" />
+    <Compile Include="Workflow\OperatorBlock.cs" />
+    <Compile Include="Workflow\OperatorEnum.cs" />
+    <Compile Include="Workflow\Workflow.cs" />
+    <Compile Include="Workflow\IOperator.cs" />
+    <Compile Include="Workflow\WorkflowConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Configuration\Configuration.csproj">
-      <Project>{887ddcd9-4aa1-47e6-b937-b215276fe3dd}</Project>
-      <Name>Configuration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{e4f6128b-190f-4cf4-9457-ff72b727a739}</Project>
       <Name>Utilities</Name>
@@ -84,6 +148,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

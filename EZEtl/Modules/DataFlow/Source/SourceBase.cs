@@ -1,10 +1,10 @@
-﻿using Configuration.Setting;
+﻿using EZEtl.Configuration.Settings;
 using EZEtl.Misc;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using Utilities;
-using Configuration.Source;
+using EZEtl.Configuration;
 
 namespace EZEtl.Source
 {
@@ -18,11 +18,11 @@ namespace EZEtl.Source
         protected DataTable NewDataTable { get { return _boilerPlateDataTable.Clone(); } }
    //     protected Dictionary<ExpansionAttributeEnum, string> _expansionAttribute;
 
-        public SourceBase(Configuration.Task task)
+        public SourceBase(ITaskConfiguration task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            _batchSizeRows = (int)task.Setting(SourceSettingEnum.BatchSizeRows.ToString()).Value;
+            _batchSizeRows = (int)task.GetSetting(SettingNameEnum.BatchSizeRows).Value;
 
             //string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
             //if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))

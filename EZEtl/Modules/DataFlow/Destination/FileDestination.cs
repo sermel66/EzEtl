@@ -4,6 +4,7 @@ using System.IO;
 using System.Data;
 using System.Threading.Tasks;
 using Utilities;
+using EZEtl.Configuration;
 
 namespace EZEtl.Destination
 {
@@ -17,19 +18,25 @@ namespace EZEtl.Destination
 
         int _bufferSize = 1024 * 1024;
 
-        public FileDestination(Source.ISource source, Configuration.Task task)
+        public FileDestination(Source.ISource source, TaskConfiguration task)
             : base(source, task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");
 
-            _fqTargetFile = (string)task.Setting( Configuration.Destination.FileSettingEnum.PathName.ToString() ).Value;
+            _fqTargetFile = (string)task.GetSetting(SettingNameEnum.FilePathPattern).Value;
             string targetFileFolder = Path.GetDirectoryName(_fqTargetFile);
             _fqTempFile = System.IO.Path.Combine(targetFileFolder, Path.GetRandomFileName());
 
             _outputStream = new System.IO.FileStream(_fqTempFile, FileMode.Create, FileAccess.Write, FileShare.None, _bufferSize);
         }
-        
+
+        public override void ExistingDataAction()
+        {
+            throw new NotImplementedException();
+        }
+
+
         public override void Close()
         {
             _outputStream.Close();

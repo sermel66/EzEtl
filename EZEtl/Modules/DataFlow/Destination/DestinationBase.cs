@@ -2,7 +2,7 @@
 using System.Data;
 using System.Threading.Tasks;
 using Utilities;
-using Configuration.Destination;
+using EZEtl.Configuration;
 
 namespace EZEtl.Destination
 {
@@ -12,13 +12,13 @@ namespace EZEtl.Destination
         protected ISource InputTask { get { return _inputTask; } }
 
         ExistingDataActionEnum _existingDataAction = ExistingDataActionEnum.UNDEFINED;
-        public ExistingDataActionEnum ExistingDataAction { get { return _existingDataAction; } }
+        public ExistingDataActionEnum ConfiguredExistingDataAction { get { return _existingDataAction; } }
 
         int _debugMessagePerNumberOfBatches = -1;
         int _batchesProcessed = 0;
         int _rowsProcessed = 0;
 
-        public DestinationBase(ISource inputTask, Configuration.Task task)
+        public DestinationBase(ISource inputTask, TaskConfiguration task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
@@ -27,11 +27,8 @@ namespace EZEtl.Destination
 
             _inputTask = inputTask;
 
-            _existingDataAction = 
-                (ExistingDataActionEnum) task.Setting(Configuration.Destination.DestinationSettingEnum.ExistingDataAction.ToString()).Value;
-
-            _debugMessagePerNumberOfBatches = 
-                (int) task.Setting(Configuration.Destination.DestinationSettingEnum.OneDebugMessagePerBatchCount.ToString()).Value;
+            _existingDataAction = (ExistingDataActionEnum) task.GetSetting(SettingNameEnum.ExistingDataAction).Value;
+            _debugMessagePerNumberOfBatches =(int)task.GetSetting(SettingNameEnum.OneDebugMessagePerBatchCount).Value;
 
         }
 
@@ -64,6 +61,8 @@ namespace EZEtl.Destination
             Close();
         }
 
+
+        public abstract void ExistingDataAction();
         public abstract void WriteTableChunk(DataTable tableChunk);
         public abstract void Close();
         public abstract void Dispose();

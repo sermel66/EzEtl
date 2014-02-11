@@ -8,13 +8,13 @@ namespace EZEtl.Source
     public static class SourceFactory
     {
 
-        public static ISource CreateSource(Configuration.Task task)
+        public static ISource CreateSource(Configuration.TaskConfiguration task)
         {
             ISource result = null;
 
-            switch(task.Type)
+            switch(task.TaskID)
             {
-                case "FILE":
+                case "FILE":  
                     result = new EZEtl.Source.File(task);
                     break;
 
@@ -24,7 +24,7 @@ namespace EZEtl.Source
 
 
                 default:
-                    throw new Configuration.ConfigurationException("Unexpected Source type [" + task.Type + "]");
+                    throw new Configuration.ConfigurationException("Unexpected Source implementation [" + task.TaskID + "]");
 
             }
 

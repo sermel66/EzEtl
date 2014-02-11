@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Utilities;
 
+using EZEtl.Configuration;
 
 namespace EZEtl.Destination
 {
@@ -23,17 +24,17 @@ namespace EZEtl.Destination
 
         public FileCsv (
              ISource source
-            ,Configuration.Task task
+            ,TaskConfiguration task
             )
             : base(source, task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             
-            if (string.IsNullOrEmpty((string)task.Setting( Configuration.Destination.FileSettingEnum.Delimiter.ToString() ).Value))
-                _delimiter = (string)task.Setting(Configuration.Destination.FileSettingEnum.Delimiter.ToString()).Value;
+        //    if (! string.IsNullOrEmpty((string)task.GetSetting( SettingNameEnum.Delimiter).Value))
+                _delimiter = (string)task.GetSetting(SettingNameEnum.Delimiter).Value;
             
-            if (string.IsNullOrEmpty((string)task.Setting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value))
-                _textQualifier = (string)task.Setting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value;
+      //      if (string.IsNullOrEmpty((string)task.GetSetting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value))
+                _textQualifier = (string)task.GetSetting(SettingNameEnum.TextQualifier).Value;
              
             _textQualifierSubstitute = _textQualifier + _textQualifier;
 

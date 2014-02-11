@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EzEtl>
+  <Base file="C:\Users\sergey\Source\Repos\EzEtl\Test\EzEtl_Common.xml" />
+  
+  <Variables>
+    <!--Variable name="BatchSizeRows" value="10000" -->
+    <Variable name="TempFolder" value="${DataRoot}Temp\" />
+    <Variable name="FeedName"  	value="" />
+	
+	<Variable name="FeedDate"   value="1900-01-01" type="DateTime" />
+	<Variable name="StartDate"  value="1900-01-01" type="DateTime" />
+	<Variable name="EndDate"    value="1900-01-01" type="DateTime" />
+	
+  </Variables>
+	
+  <Modules>
+    <DataFlow name="Upload">
+      <Source type="FILE">
+        <FilePathPattern>C:\temp\EzEtl\PipeOut.csv</FilePathPattern>
+        <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
+        <TempFolder>C:\temp\EzEtl\Temp\</TempFolder>
+        <Encoding>utf-8</Encoding>
+        <TempFileEncoding>Unicode</TempFileEncoding>
+		<BatchSizeRows>1000000</BatchSizeRows>
+      </Source>
+
+      <Destination type="SQLBULK">
+        <ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <TimestampColumn>FeedDate</TimestampColumn>
+        <TableName>dbo.AdHoc</TableName>
+		<ExistingDataAction>Truncate</ExistingDataAction>
+        <DbOperationTimeout>1500</DbOperationTimeout>
+		<OneDebugMessagePerBatchCount>1</OneDebugMessagePerBatchCount>
+      </Destination>
+
+    </DataFlow>
+	
+	<SqlExec name="GetStartDate">
+		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
+		 <StoredProcedure name="dbo.StartDate">
+			<Argument name="@FeedName" value="${FeedName}" direction="INPUT" />
+			<Argument name="@StartDate" value="${StartDate}" direction="OUTPUT" />
+		</StoredProcedure>
+	</SqlExec>
+	
+	<SqlExec name="ProcessFeed">
+		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
+		 <CommandText>dbo.AdHocLoad @FeedName=${FeedName}, @StartDate=${StartDate} OUTPUT</CommandText>
+	</SqlExec>
+	
+  </Modules>
+
+  <Workflow>
+		<SetVariable name="FeedName" value="AdHoc">
+		<ExecuteModule name="GetStartDate">
+		<ForLoop 
+				InitExpression="${FeedDate}=${StartDate}"
+				EvalExpression="${FeedDate}<=${EndDate}"
+				AssignExpression="${FeedDate}=DATEADD(day,1,${FeedDate})"
+		>
+			<ExecuteModule name="Upload">
+			<ExecuteModule name="ProcessFeed">
+		</ForLoop>
+  </Workflow>
+  
+</EzEtl>
