@@ -20,19 +20,28 @@ namespace EZEtl.Configuration
                 throw new ConfigurationException("Expected item name [" + VariableItemName + "], but encountered ["
                     + item.Name.ToString() + "]");
 
-            string variableName = item.Attribute(AttributeNameEnum.name.ToString()).Value;
-            string variableTypeName = item.Attribute(AttributeNameEnum.type.ToString()).Value;
-            string variableValue = item.Attribute(AttributeNameEnum.value.ToString()).Value;
+            XAttribute variableIdAttribute = item.Attribute(AttributeNameEnum.ID.ToString());
+            XAttribute variableTypeNameAttribute = item.Attribute(AttributeNameEnum.type.ToString());
+            XAttribute variableValueAttribute = item.Attribute(AttributeNameEnum.value.ToString());
 
-            if (string.IsNullOrWhiteSpace(variableName))
-                errorMessage += "Attribute " + AttributeNameEnum.name.ToString() + " is missing;";
+            if (variableIdAttribute == null || String.IsNullOrWhiteSpace(variableIdAttribute.Value))
+                errorMessage += "Attribute " + AttributeNameEnum.ID.ToString() + " is missing or empty; ";
 
-            if (string.IsNullOrWhiteSpace(variableTypeName))
-                errorMessage += "Attribute " + AttributeNameEnum.type.ToString() + " is missing;";
+            if (variableValueAttribute == null )
+                errorMessage += "Attribute " + AttributeNameEnum.value.ToString() + " is missing; ";
 
             SupportedVariableTypeEnum variableType;
-            if ( ! Enum.TryParse<SupportedVariableTypeEnum>(variableTypeName, out variableType))
-                errorMessage += "Unsupported variable type " + variableTypeName +";";
+            if (variableTypeNameAttribute != null)
+            {
+                if (!Enum.TryParse<SupportedVariableTypeEnum>(variableTypeNameAttribute.Value, out variableType))
+                {
+                    errorMessage += "Unsupported variable type [" + variableTypeNameAttribute.Value + "]; ";
+                }
+            }
+            else
+            {
+                variableType = SupportedVariableTypeEnum.String;
+            }
 
             if (errorMessage.Length > 0)
                 return null;
@@ -40,25 +49,25 @@ namespace EZEtl.Configuration
             switch(variableType)
             {
                 case SupportedVariableTypeEnum.String:
-                    return new Variable<string>(variableName, variableType, variableValue);
+                    return new Variable<string>(variableIdAttribute.Value, variableType, variableValueAttribute.Value);
 
                 case SupportedVariableTypeEnum.Int32:
-                    int valueInt; 
-                    if (! Int32.TryParse(variableValue, out valueInt))
+                    int valueInt;
+                    if (!Int32.TryParse(variableValueAttribute.Value, out valueInt))
                     {
-                        errorMessage += "Could not convert value [" + variableValue + "] to " + variableType.ToString();
+                        errorMessage += "Could not convert value [" + variableValueAttribute.Value + "] to " + variableType.ToString();
                         return null;
                     }
-                    return new Variable<Int32>(variableName, variableType, valueInt);
+                    return new Variable<Int32>(variableIdAttribute.Value, variableType, valueInt);
 
                 case SupportedVariableTypeEnum.DateTime:
                     DateTime valueDateTime;
-                    if (!DateTime.TryParse(variableValue, out valueDateTime))
+                    if (!DateTime.TryParse(variableValueAttribute.Value, out valueDateTime))
                     {
-                        errorMessage += "Could not convert value [" + variableValue + "] to " + variableType.ToString();
+                        errorMessage += "Could not convert value [" + variableValueAttribute.Value + "] to " + variableType.ToString();
                         return null;
                     }
-                    return new Variable<DateTime>(variableName, variableType, valueDateTime);
+                    return new Variable<DateTime>(variableIdAttribute.Value, variableType, valueDateTime);
                 default:
                     throw new Exception("Unexpected variableType [" + variableType.ToString() + "]");
             }

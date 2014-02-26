@@ -31,7 +31,10 @@ namespace EZEtl.Configuration.Settings
 
         public void OutputDiagnostics()
         {
-            Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+            if (!string.IsNullOrWhiteSpace(_errorMessage))
+            {
+                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+            }
         }
 
         protected bool _isPresent = false;

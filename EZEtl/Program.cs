@@ -5,9 +5,17 @@ using System.Text;
 using Utilities;
 using System.Threading.Tasks;
 using EZEtl.Misc;
+using EZEtl.Configuration;
 
 namespace EZEtl
 {
+    class ExitCodes
+    {
+        public const int 
+                Success = 0
+              , Failure = 1;
+    }
+
     class Program
     {
 
@@ -15,7 +23,10 @@ namespace EZEtl
         const string CommandLineSwitchValueSeparator = "=";
         const string LogFileTimeStampFormat = "yyyy-MM-dd_HH_mm_ss";
 
-        static void Main(string[] args)
+        static ConfigurationFile _configurationFile;
+        public static ConfigurationFile Configuration { get { return _configurationFile; } }
+
+        static int Main(string[] args)
         {
             try
             {
@@ -157,7 +168,6 @@ namespace EZEtl
 
                 // ============= End of Command Line, Begin Configuration =============
 
-                Configuration.Configuration.Create(new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList));
                 string logName = @"c:\temp\ezetl.log"; // TODO
                 Utilities.SimpleLog.SetUpLog(logName,SimpleLogEventType.Trace,false);
                 switch ( verbosityLevel )
@@ -175,10 +185,21 @@ namespace EZEtl
                             throw new Exception("Programmer's error: unexpected VerbosityLevel " + verbosityLevel.ToString());
                 }
 
+                _configurationFile = new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList);
+                if (! _configurationFile.IsValid)
+                {
+                    Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);
+                //    EZEtl.Workflow.c
+                }
+                else
+                {
+                    Utilities.SimpleLog.ToLog("Configration is invalid", SimpleLogEventType.Trace);
+                    _configurationFile.OutputDiagnostics();
+                    return ExitCodes.Failure;
+                }
 
-                Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);
-
-                EZEtl.Workflow.WorkflowProcess.ProcessWorkflow();
+                Utilities.SimpleLog.ToLog("Begin workflow execution", SimpleLogEventType.Trace);
+                EZEtl.Workflow.WorkflowProcess.Execute();
 
                 //PipeIn.SqlClientInput rdr = new PipeIn.SqlClientInput(1024, connectionString, query, 500);
 
@@ -188,29 +209,20 @@ namespace EZEtl
                 ///*  Task.WaitAll(task); */
                 //  wrt.Close();
 
+                return ExitCodes.Success;
+
             }
             catch (Exception ex)
             {
-
-                System.Console.WriteLine(ex.Message);
-                SimpleLog.ToLog(ex.Message, SimpleLogEventType.Error);
-                SimpleLog.ToLog(ex.StackTrace, SimpleLogEventType.Error);
+                SimpleLog.ToLog(ex.ToString(), SimpleLogEventType.Error);         
 
                 if (ex.InnerException != null && ex.InnerException != ex)
                 {
-                    System.Console.WriteLine(ex.InnerException.Message);
-                    SimpleLog.ToLog(ex.InnerException.Message, SimpleLogEventType.Error);
-                    SimpleLog.ToLog(ex.InnerException.StackTrace, SimpleLogEventType.Error);
+                    SimpleLog.ToLog(ex.InnerException.ToString(), SimpleLogEventType.Error);
                 }
 
+                return ExitCodes.Failure;
             }
-
-
-            //DataTable bt = rdr.ReadBatch();
-            //int gotCount = bt.Rows.Count;
-            //bt = rdr.ReadBatch();
-            //gotCount = bt.Rows.Count;
-
         }
 
         static void Usage()

@@ -18,10 +18,10 @@ namespace EZEtl.Modules
             if (xmlItemModule == null || string.IsNullOrWhiteSpace(xmlItemModule.ToString()))
                 throw new ArgumentNullException("xmlItemModule");      
 
-            string id = xmlItemModule.Attribute(AttributeNameEnum.ID.ToString()).Value;
-            if (String.IsNullOrWhiteSpace(id))
+            XAttribute idAttribute = xmlItemModule.Attribute(AttributeNameEnum.ID.ToString());
+            if (idAttribute == null || string.IsNullOrWhiteSpace( idAttribute.Value) )
             {
-                errorMessage += "Attribute '" + AttributeNameEnum.ID.ToString() + "' is missing; ";
+                errorMessage += "Attribute '" + AttributeNameEnum.ID.ToString() + "' is missing or empty; ";
                 // in the module ["
                 //    + xmlItemModule.ToString().Substring(1, Constant.XmlQuoteLength) + "]; ";
             }
@@ -39,10 +39,10 @@ namespace EZEtl.Modules
            switch(moduleType)
            {
                case ModuleTypeEnum.DataFlow:
-                   return new DataFlow.DataFlowModule(parent, moduleType, id, xmlItemModule);
+                   return new DataFlow.DataFlowModule(parent, moduleType, idAttribute.Value, xmlItemModule);
 
                case ModuleTypeEnum.SqlExec:
-                    return new SqlExec.SqlExecModule(parent, moduleType, id, xmlItemModule);
+                   return new SqlExec.SqlExecModule(parent, moduleType, idAttribute.Value, xmlItemModule);
 
                default:
                    throw new EZEtlException("Unexpected moduleType " + moduleType.ToString());

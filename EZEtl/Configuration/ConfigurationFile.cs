@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace EZEtl.Configuration
 {
-    public class ConfigurationFile : IConfigurationParent
+    public class ConfigurationFile : IConfigurationParent, IDiagnosable
     {
         string _configurationHierarchy;
         public string ConfigurationHierarchy { get { return _configurationHierarchy; } }
@@ -15,7 +15,7 @@ namespace EZEtl.Configuration
 
         List<string> _knownConfigFilePathList;
         XDocument _userConfigDocument;
-   
+
         Dictionary<string, IVariable> _variables = new Dictionary<string, IVariable>();
         public IEnumerable<string> VariableNames { get { return _variables.Keys; } }
         public IVariable GetVariable(string variableName)
@@ -23,7 +23,7 @@ namespace EZEtl.Configuration
             if (string.IsNullOrWhiteSpace(variableName))
                 throw new System.ArgumentNullException("variableName");
 
-            if (_modules.ContainsKey(variableName))
+            if (_variables.ContainsKey(variableName))
                 return _variables[variableName];
 
             return null;
@@ -42,12 +42,47 @@ namespace EZEtl.Configuration
             throw new System.ArgumentOutOfRangeException("moduleID", moduleID, "Not found");
         }
 
+        Workflow.OperatorBlock _workFlowOperatorBlock;
+
         List<string> _warningMessages = new List<string>();
         List<string> _errorMessages = new List<string>();
-        public bool IsValid { get { return _errorMessages.Count == 0; } }
+        public bool IsValid
+        {
+            get
+            {
 
-        Workflow.WorkflowConfiguration _workflowConfiguration = new Workflow.WorkflowConfiguration();
-        
+                if (_errorMessages.Count != 0) return false;
+
+                foreach (IDiagnosable module in _modules.Values)
+                {
+                    if (!module.IsValid)
+                        return false;
+                }
+
+                if (_workFlowOperatorBlock == null)
+                    return false;
+
+                return _workFlowOperatorBlock.IsValid;
+            }
+        }
+
+        public void OutputDiagnostics()
+        {
+            foreach (string errorMessage in _errorMessages)
+            {
+                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, errorMessage);
+            }
+
+            foreach ( IDiagnosable module in _modules.Values)
+            {
+                module.OutputDiagnostics();
+            }
+
+            if (_workFlowOperatorBlock != null)
+                _workFlowOperatorBlock.OutputDiagnostics();
+
+        }
+
         public ConfigurationFile(string configFilePath, List<string> processedConfigFilePathList)
         {
             if (string.IsNullOrWhiteSpace(configFilePath))
@@ -76,7 +111,7 @@ namespace EZEtl.Configuration
                 ConfigurationFile baseFile = new ConfigurationFile(baseFilePath, _knownConfigFilePathList);
 
                 // import base variables
-                foreach ( string variableName in baseFile.VariableNames)
+                foreach (string variableName in baseFile.VariableNames)
                 {
                     _variables.Add(variableName, baseFile.GetVariable(variableName));
                 }
@@ -84,15 +119,17 @@ namespace EZEtl.Configuration
                 // import base modules
                 foreach (string moduleID in baseFile.ModuleIDs)
                 {
-                    _modules.Add(moduleID,baseFile.Module(moduleID));
+                    _modules.Add(moduleID, baseFile.Module(moduleID));
                 }
 
                 // TODO import workflow
 
             }
-     
+
             // Loop through the remaining top level elements
             List<string> unexpectedTopLevelElements = new List<string>();
+            Dictionary<TopLevelItemEnum, XElement> presentToplevelItems = new Dictionary<TopLevelItemEnum, XElement>();
+            string errorMessage;
 
             foreach (XElement item in _userConfigDocument.Descendants())
             {
@@ -104,77 +141,60 @@ namespace EZEtl.Configuration
                     unexpectedTopLevelElements.Add(item.Name.ToString());
                     continue;
                 }
+                presentToplevelItems.Add(topLevelItem, item);
+            }
 
-                string errorMessage;
-                switch (topLevelItem)
+            if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Variables))
+            {
+                foreach (XElement variableItem in presentToplevelItems[TopLevelItemEnum.Variables].Elements())
                 {
-                    case TopLevelItemEnum.Variables:
-                        foreach ( XElement variableItem in item.Descendants(topLevelItem.ToString()) )
+                    IVariable newVariable = VariableFactory.Create(variableItem, out errorMessage);
+                    if (newVariable == null)
+                    {
+                        if (string.IsNullOrWhiteSpace(errorMessage))
                         {
-                            IVariable newVariable = VariableFactory.Create(variableItem, out errorMessage);
-                            if (newVariable == null)
-                            {
-                                if (string.IsNullOrWhiteSpace(errorMessage))
-                                    throw new Exception("VariableFactory.Create returned null object with empty error message");
-
-                                _errorMessages.Add(errorMessage);
-                            }
-                            else if (_variables.ContainsKey(newVariable.Name))
-                            {
-                                errorMessage = "Variable " + newVariable.Name + " already defined in this or included file(s)";
-                            }
-                            else
-                            {
-                                _variables.Add(newVariable.Name, newVariable);
-                            }
+                            throw new Exception("VariableFactory.Create returned null object with empty error message");
                         }
-                        break;
-
-                    case TopLevelItemEnum.Modules:
-                        foreach (XElement moduleItem in item.Descendants(topLevelItem.ToString()))
-                        {
-                            IModule newModule = ModuleFactory.Create(this, moduleItem, out errorMessage);
-                            if ( newModule == null)
-                            {
-                                _errorMessages.Add(errorMessage);
-                                continue;
-                            }
-
-                            if ( _modules.ContainsKey(newModule.ModuleID))
-                            {
-                                _errorMessages.Add("Module ID " + newModule.ModuleID + " already defined in this or included file(s)");
-                                continue;
-                            }
-
-                            _modules.Add(newModule.ModuleID, newModule);
-                        }
-                        break;
-
-                    case TopLevelItemEnum.Workflow:
-                        
-                        break;
-
-                    case TopLevelItemEnum.Base:
-                        break; // already processed
-
-                    default:
-                        throw new EZEtlException("Unimplemented TopLevelItemEnum item " + topLevelItem.ToString());
-
+                        _errorMessages.Add(errorMessage);
+                    }
+                    else if (_variables.ContainsKey(newVariable.Name))
+                    {
+                        errorMessage = "Variable [" + newVariable.Name + "] already defined in this or included file(s)";
+                        _errorMessages.Add(errorMessage);
+                    }
+                    else
+                    {
+                        _variables.Add(newVariable.Name, newVariable);
+                    }
                 }
-              
-                //// Modules
-                //foreach (
-                //  XElement item in _userConfigDocument.Descendants(TopLevelItemEnum.Modules.ToString()).Descendants("Module")
-                //  )
-                //{
-                //    Module module = new Module(item);
+            }
 
-                //    if (_modules.ContainsKey(module.Name))
-                //        throw new ConfigurationException(String.Format("Module {0} declared multiple times", module.Name));
+            if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Modules))
+            {
+                foreach (XElement moduleItem in presentToplevelItems[TopLevelItemEnum.Modules].Elements() )
+                {
+                    IModule newModule = ModuleFactory.Create(this, moduleItem, out errorMessage);
+                    if (newModule == null)
+                    {
+                        _errorMessages.Add(errorMessage);
+                        continue;
+                    }
 
-                //    _modules.Add(module.Name, module);
+                    if (_modules.ContainsKey(newModule.ModuleID))
+                    {
+                        _errorMessages.Add("Module ID " + newModule.ModuleID + " already defined in this or included file(s)");
+                        continue;
+                    }
 
-                //}
+                    _modules.Add(newModule.ModuleID, newModule);
+                }
+
+            }
+
+            if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Workflow))
+            {
+                _workFlowOperatorBlock = new Workflow.OperatorBlock(this, this, TopLevelItemEnum.Workflow.ToString());
+                _workFlowOperatorBlock.Parse(presentToplevelItems[TopLevelItemEnum.Workflow]);
 
             }
         }

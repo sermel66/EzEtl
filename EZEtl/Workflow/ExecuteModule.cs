@@ -15,21 +15,21 @@ namespace EZEtl.Workflow
         IModule _module;
 
         // <ExecuteModule ID="GetStartDate" />
-        public ExecuteModule(IConfigurationParent parent, OperatorEnum operatorType, string itemToExecuteID)
-            : base(parent, operatorType, itemToExecuteID)
+        public ExecuteModule(ConfigurationFile scope, IConfigurationParent parent, OperatorEnum operatorType, string itemToExecuteID)
+            : base(scope, parent, operatorType, itemToExecuteID)
         {
             // locate the module with the provided ID
 
-            _module = Configuration.Configuration.Module(itemToExecuteID);
-            if (_module == null)
-            {
+            if (  ! new List<string>(_scope.ModuleIDs).Contains(itemToExecuteID) )            {
                 _errorMessage = "Module ID=" + itemToExecuteID + " not found in the Modules section";
                 return;
             }
+            
+            _module = _scope.Module(itemToExecuteID);
 
         }
 
-        public void Execute()
+        public void Execute(params object[] args)
         {
             _module.Execute();
         }

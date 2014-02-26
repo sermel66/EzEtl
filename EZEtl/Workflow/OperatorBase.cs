@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EZEtl.Configuration.Misc;
+using EZEtl.Configuration;
 
 namespace EZEtl.Workflow
 {
@@ -10,7 +11,9 @@ namespace EZEtl.Workflow
     {
         protected string _errorMessage = string.Empty;
 
-        public void OutputDiagnostics()
+        protected ConfigurationFile _scope;
+
+        public virtual void OutputDiagnostics()
         {
             if (_errorMessage.Length > 0)
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
@@ -18,8 +21,14 @@ namespace EZEtl.Workflow
 
         public virtual bool IsValid { get { return string.IsNullOrWhiteSpace(_errorMessage); } }
 
-        public OperatorBase(  IConfigurationParent parent, OperatorEnum operatorType, string qualifierID )
+        public OperatorBase(ConfigurationFile scope, IConfigurationParent parent, OperatorEnum operatorType, string qualifierID )
             : base(parent, operatorType.ToString(), qualifierID)
-        { }
+        {
+
+            if (scope == null)
+                throw new ArgumentNullException("scope");
+
+            _scope = scope;
+        }
     }
 }

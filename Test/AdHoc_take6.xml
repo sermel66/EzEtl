@@ -5,7 +5,7 @@
   <Variables>
     <!-- Variable ID="BatchSizeRows" value="10000" -->
     <Variable ID="TempFolder" value="${DataRoot}Temp\" />
-    <Variable ID="FeedName"  	value="" />
+    <Variable ID="FeedName"   value="" />
 	
 	<Variable ID="FeedDate"   value="1900-01-01" type="DateTime" />
 	<Variable ID="StartDate"  value="1900-01-01" type="DateTime" />
@@ -56,7 +56,7 @@
   <Workflow>
 		<SetVariable ID="FeedName" value="AdHoc" />
 		<ExecuteModule ID="GetStartDate" />
-		<ForLoop 
+		<ForLoop ID="Loop1"
 				InitExpression="${FeedDate}=${StartDate}"
 				EvalExpression="${FeedDate}&lt;=${EndDate}"
 				AssignExpression="${FeedDate}=DATEADD(day,1,${FeedDate})">

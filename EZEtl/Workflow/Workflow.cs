@@ -8,9 +8,14 @@ namespace EZEtl.Workflow
 {
     public static class WorkflowProcess
     {
-        
-        public static void ProcessWorkflow()
+        static ConfigurationFile _configuration;
+        public static ConfigurationFile Configuration { get { return _configuration; } }
+
+        public static void Execute(params object[] args)
         {
+            
+
+
           //Module module = Module(guration.EntryPointModuleName);
 
           // DataFlowProcess pm = new DataFlowProcess(module);
