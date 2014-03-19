@@ -31,6 +31,9 @@ namespace EZEtl.Configuration.Settings
 
         public void OutputDiagnostics()
         {
+            if ( ! (_isOptional || _isPresent))
+                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Required setting is not provided");
+
             if (!string.IsNullOrWhiteSpace(_errorMessage))
             {
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EzEtl>
+  	
+  <Modules>
+    <DataFlow ID="Download">
+
+      <Source ID="SQL">
+        <ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <Query>
+			SELECT 
+			   [year]
+			  ,[StatePostalCode]
+			  ,[StateFipsCode]
+			  ,[CountyFipsCode]
+			  ,[Registry]
+			  ,[RaceId]
+			  ,[OriginId]
+			  ,[SexId]
+			  ,[AgeGroupId]
+			  ,[Population]
+			  ,[Delimiter]
+			FROM [TestAssignment].[dbo].[Census]
+		</Query> 
+        <DbOperationTimeout>1500</DbOperationTimeout>
+		<OneDebugMessagePerBatchCount>1</OneDebugMessagePerBatchCount>
+ 		<BatchSizeRows type="Int32">1000000</BatchSizeRows>
+      </Source>
+
+	  <Destination ID="File">
+			<FilePath>C:\temp\EzEtl\PipeOut.csv</FilePath>
+			<Encoding>utf-8</Encoding>
+			<Delimiter>,</Delimiter>
+			<TextQualifier>"</TextQualifier>
+	  </Destination>
+
+    </DataFlow>
+	
+  </Modules>
+
+  <Workflow>
+		<ExecuteModule ID="Download" />
+  </Workflow>
+  
+</EzEtl>

@@ -44,9 +44,19 @@ namespace EZEtl.Configuration.Settings
             _type = typeof(T);
             _isOptional = isOptional;
 
-            if ( defaultValue != null && defaultValue.Length > 0 )
-                _value = defaultValue[0];
-          
+            if (_isOptional )
+            {
+                if( defaultValue != null && defaultValue.Length > 0)
+                {
+                    _value = defaultValue[0];
+                    _isValid = true;
+                }
+                else
+                {
+                    throw new EZEtlException("Setting [" + settingName.ToString() + "] is declared optional, but default value is not provided");
+                
+                }
+            }
            _typeConverter =TypeDescriptor.GetConverter(_type);
           
         }

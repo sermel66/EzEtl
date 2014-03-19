@@ -15,7 +15,7 @@ namespace EZEtl.Workflow
         IModule _module;
 
         // <ExecuteModule ID="GetStartDate" />
-        public ExecuteModule(ConfigurationFile scope, IConfigurationParent parent, OperatorEnum operatorType, string itemToExecuteID)
+        public ExecuteModule(ConfigurationFile scope, IConfigurationParent parent, string operatorType, string itemToExecuteID)
             : base(scope, parent, operatorType, itemToExecuteID)
         {
             // locate the module with the provided ID

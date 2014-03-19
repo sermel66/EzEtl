@@ -17,7 +17,7 @@ namespace EZEtl.Workflow
 
 
        //  <SetVariable ID="FeedName" value="AdHoc" />
-        public SetVariable(ConfigurationFile scope,  IConfigurationParent parent, OperatorEnum operatorType, string variableId, string expression)
+        public SetVariable(ConfigurationFile scope,  IConfigurationParent parent, string operatorType, string variableId, string expression)
             : base(scope, parent, operatorType, variableId)
         {
          

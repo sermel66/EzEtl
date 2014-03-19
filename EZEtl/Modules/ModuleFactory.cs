@@ -45,7 +45,7 @@ namespace EZEtl.Modules
                    return new SqlExec.SqlExecModule(parent, moduleType, idAttribute.Value, xmlItemModule);
 
                default:
-                   throw new EZEtlException("Unexpected moduleType " + moduleType.ToString());
+                   throw new Utilities.AssertViolationException("Unexpected moduleType " + moduleType.ToString());
 
            }
    

@@ -10,5 +10,6 @@ namespace EZEtl.Destination
         /*Task*/ void ExecuteAsync();
         void WriteTableChunk(DataTable tableChunk);
         void Close();
+        void SetSource(Source.ISource source);
     }
 }

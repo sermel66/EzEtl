@@ -22,11 +22,8 @@ namespace EZEtl.Destination
         System.Text.Encoding _outputEncoding = Encoding.Default;
               
 
-        public FileCsv (
-             ISource source
-            ,TaskConfiguration task
-            )
-            : base(source, task)
+        public FileCsv (ITaskConfiguration task)
+            : base(task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             

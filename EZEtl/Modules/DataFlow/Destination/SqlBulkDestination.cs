@@ -16,8 +16,8 @@ namespace EZEtl.Destination
         SqlTransaction _transaction;
         SqlBulkCopy _sbc;
 
-        public SqlBulkDestination(ISource source, Configuration.TaskConfiguration task)
-            : base(source, task)
+        public SqlBulkDestination(ITaskConfiguration task)
+            : base(task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");

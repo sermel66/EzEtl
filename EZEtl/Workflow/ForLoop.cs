@@ -52,7 +52,7 @@ namespace EZEtl.Workflow
             }
         }
                 
-        public ForLoop (ConfigurationFile scope, IConfigurationParent parent, OperatorEnum operatorType, string blockID, XElement element )
+        public ForLoop (ConfigurationFile scope, IConfigurationParent parent, string operatorType, string blockID, XElement element )
             : base(scope, parent, operatorType, blockID)
         {
 
@@ -90,7 +90,16 @@ namespace EZEtl.Workflow
 
         public void Execute(params object[] args)
         {
-           // TODO
+            //for (
+                
+                
+            //    )
+            //{
+            //    _operatorBlock.Execute();
+            //}
+
+
+           // throw new System.NotImplementedException(); // TODO
         }
     }
 }

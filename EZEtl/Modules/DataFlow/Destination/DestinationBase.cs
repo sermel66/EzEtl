@@ -8,8 +8,8 @@ namespace EZEtl.Destination
 {
     public abstract class DestinationBase : IDestination
     {
-        ISource _inputTask;
-        protected ISource InputTask { get { return _inputTask; } }
+        ISource _sourceTask;
+        protected ISource InputTask { get { return _sourceTask; } }
 
         ExistingDataActionEnum _existingDataAction = ExistingDataActionEnum.UNDEFINED;
         public ExistingDataActionEnum ConfiguredExistingDataAction { get { return _existingDataAction; } }
@@ -18,25 +18,28 @@ namespace EZEtl.Destination
         int _batchesProcessed = 0;
         int _rowsProcessed = 0;
 
-        public DestinationBase(ISource inputTask, TaskConfiguration task)
+        public DestinationBase(ITaskConfiguration task)
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
-
-            if (inputTask == null)
-                throw new System.ArgumentNullException("inputTask");
-
-            _inputTask = inputTask;
 
             _existingDataAction = (ExistingDataActionEnum) task.GetSetting(SettingNameEnum.ExistingDataAction).Value;
             _debugMessagePerNumberOfBatches =(int)task.GetSetting(SettingNameEnum.OneDebugMessagePerBatchCount).Value;
 
         }
 
+        public void SetSource(ISource sourceTask)
+        {
+            if (sourceTask == null)
+                throw new System.ArgumentNullException("sourceTask");
+
+            _sourceTask = sourceTask;
+        }
+
         public /*async Task*/ void ExecuteAsync()
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            DataTable inTbl = _inputTask.ReadBatch();
+            DataTable inTbl = _sourceTask.ReadBatch();
      
             SimpleLog.ToLog("First batch: inTbl.Rows.Count=" + inTbl.Rows.Count.ToString(), SimpleLogEventType.Debug);
 
@@ -53,7 +56,7 @@ namespace EZEtl.Destination
                 if ( _debugMessagePerNumberOfBatches > 0 &&  _batchesProcessed % _debugMessagePerNumberOfBatches == 0)
                     SimpleLog.ToLog(_rowsProcessed.ToString() +" rows transferred" , SimpleLogEventType.Debug);
 
-                inTbl = _inputTask.ReadBatch();
+                inTbl = _sourceTask.ReadBatch();
 
                // await chunkOutputTask;
             }

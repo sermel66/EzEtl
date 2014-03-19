@@ -18,13 +18,13 @@ namespace EZEtl.Destination
 
         int _bufferSize = 1024 * 1024;
 
-        public FileDestination(Source.ISource source, TaskConfiguration task)
-            : base(source, task)
+        public FileDestination(ITaskConfiguration task)
+            : base(task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");
 
-            _fqTargetFile = (string)task.GetSetting(SettingNameEnum.FilePathPattern).Value;
+            _fqTargetFile = (string)task.GetSetting(SettingNameEnum.FilePath).Value;
             string targetFileFolder = Path.GetDirectoryName(_fqTargetFile);
             _fqTempFile = System.IO.Path.Combine(targetFileFolder, Path.GetRandomFileName());
 

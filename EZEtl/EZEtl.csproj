@@ -55,6 +55,8 @@
     <Compile Include="Configuration\Misc\ConfigurationException.cs" />
     <Compile Include="Configuration\Misc\ConfigurationParentBase.cs" />
     <Compile Include="Configuration\Misc\Constant.cs" />
+    <Compile Include="Configuration\Misc\Defaults.cs" />
+    <Compile Include="Configuration\Misc\DiagnosableBase.cs" />
     <Compile Include="Configuration\Misc\Diagnostics.cs" />
     <Compile Include="Configuration\Misc\ExistingDataActionEnum.cs" />
     <Compile Include="Configuration\Misc\IDiagnosable.cs" />
@@ -63,29 +65,42 @@
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
     <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
+    <Compile Include="Configuration\Misc\XmlUtil.cs" />
     <Compile Include="Configuration\Setting\ExpectedSetting.cs" />
     <Compile Include="Configuration\Setting\ISetting.cs" />
     <Compile Include="Configuration\TaskConfiguration\ITaskConfiguration.cs" />
+    <Compile Include="Expressions\Arithmetic.cs" />
+    <Compile Include="Expressions\ArithmeticExpressionEnum.cs" />
+    <Compile Include="Expressions\Combo.cs" />
+    <Compile Include="Expressions\DateAdd.cs" />
+    <Compile Include="Expressions\ExpressionBase.cs" />
+    <Compile Include="Expressions\ExpressionFactory.cs" />
+    <Compile Include="Expressions\IExpression.cs" />
+    <Compile Include="Expressions\OperandEnum.cs" />
     <Compile Include="Modules\CompositeModule.cs" />
     <Compile Include="Modules\DataFlow\DataFlowModule.cs" />
+    <Compile Include="Modules\DataFlow\Destination\DestinationTaskEnum.cs" />
+    <Compile Include="Modules\DataFlow\Destination\FileCsvTaskConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Destination\FileTaskConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Destination\DestinationCommonConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Destination\SqlBulkTaskConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Source\SourceCommonConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Source\SourceTaskEnum.cs" />
+    <Compile Include="Modules\DataFlow\Source\FileTaskConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Source\SqlTaskConfiguration.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Configuration\Setting\Setting.cs" />
     <Compile Include="Configuration\Setting\SettingBase.cs" />
     <Compile Include="Configuration\TaskConfiguration\TaskConfiguration.cs" />
     <Compile Include="Configuration\Misc\DataFlowStepEnum.cs" />
-    <Compile Include="Configuration\TaskConfiguration\TaskFactory.cs" />
     <Compile Include="Configuration\TopLevelItemEnum.cs" />
     <Compile Include="Configuration\Variables\IVariable.cs" />
-    <Compile Include="Configuration\Variables\ReservedVariableEnum.cs" />
     <Compile Include="Configuration\Variables\SupportedVariableTypeEnum.cs" />
     <Compile Include="Configuration\Variables\Variable.cs" />
     <Compile Include="Configuration\Variables\VariableFactory.cs" />
     <Compile Include="Misc\EZEtlException.cs" />
     <Compile Include="Misc\SchemaTableColumnsEnum.cs" />
     <Compile Include="Misc\VerbosityLevel.cs" />
-    <Compile Include="Modules\DataFlow\DataFlowProcess.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Modules\DataFlow\Destination\DestinationBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -133,7 +148,6 @@
     <Compile Include="Workflow\OperatorBase.cs" />
     <Compile Include="Workflow\OperatorBlock.cs" />
     <Compile Include="Workflow\OperatorEnum.cs" />
-    <Compile Include="Workflow\Workflow.cs" />
     <Compile Include="Workflow\IOperator.cs" />
   </ItemGroup>
   <ItemGroup>

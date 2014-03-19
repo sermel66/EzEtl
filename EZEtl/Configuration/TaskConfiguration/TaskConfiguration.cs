@@ -5,15 +5,14 @@ using System.Text;
 using System.Xml.Linq;
 using EZEtl.Configuration.Settings;
 using EZEtl.Configuration.Misc;
+using System.Linq.Expressions;
 
 
 namespace EZEtl.Configuration
 {
     public class TaskConfiguration : ConfigurationParentBase, ITaskConfiguration
     {
-        //string _configurationHierarchy;
-        //public string ConfigurationHierarchy { get { return _configurationHierarchy; } }
-
+       
         string _errorMessage = string.Empty;
         List<string> _unexpectedSettings = new List<string>();
         Dictionary<string, int> _settingCount = new Dictionary<string, int>();
@@ -23,6 +22,8 @@ namespace EZEtl.Configuration
 
         string _taskID;
         public string TaskID { get { return _taskID; } }
+
+        Func<ITaskConfiguration, object> _instantiator;
 
         public IEnumerable<SettingNameEnum> SettingNameList
         {
@@ -50,6 +51,8 @@ namespace EZEtl.Configuration
         {
             get
             {
+                if (_instantiator == null)
+                    return false;
 
                 foreach (KeyValuePair<SettingNameEnum, ISetting> entry in _settings)
                 {
@@ -68,8 +71,14 @@ namespace EZEtl.Configuration
             }
 
             if (_errorMessage.Length > 0)
+            {
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+            }
 
+            if ( _instantiator == null)
+            {
+                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Instantiator not set");
+            }
         }
 
         public TaskConfiguration(IConfigurationParent parent, DataFlowStepEnum dataFlowStep, string taskID)
@@ -103,7 +112,7 @@ namespace EZEtl.Configuration
             if (string.IsNullOrWhiteSpace(body.ToString()))
                 throw new ArgumentNullException("body");
 
-            foreach (XElement item in body.Descendants())
+            foreach (XElement item in body.Elements() ) //  Descendants())
             {
                 string itemName = item.Name.LocalName;
 
@@ -112,9 +121,10 @@ namespace EZEtl.Configuration
                 {
                     string itemValue = string.Empty;
 
-                    if (item.HasAttributes || item.HasElements)
-                        itemValue = item.ToString();
-                    else if (!item.IsEmpty)
+                    //if (item.HasAttributes || item.HasElements)
+                    //    itemValue = item.ToString();
+                    //else 
+                    if (!item.IsEmpty)
                         itemValue = item.Value;
 
                     if (_settings.ContainsKey(settingName))
@@ -144,6 +154,28 @@ namespace EZEtl.Configuration
 
             }
 
+        }
+
+        public void SetConstructor(Type typeToInstantiate)
+        {
+           
+            Expression<Func<ITaskConfiguration, object>> lambda;
+           
+                ParameterExpression param = Expression.Parameter(typeof(ITaskConfiguration), "taskConfiguration");
+                System.Reflection.ConstructorInfo constructor = typeToInstantiate.GetConstructor(new[] { typeof(ITaskConfiguration) });
+                if (constructor == null)
+                    throw new Exception("No matching constructor found for type " + typeToInstantiate.ToString());
+
+                lambda = Expression.Lambda<Func<ITaskConfiguration, object>>(System.Linq.Expressions.Expression.New(constructor, param), param);
+         
+   
+           _instantiator = lambda.Compile();
+         }
+
+        public object Instantiate()
+        {
+            return _instantiator(this);
+      
         }
     }
 }

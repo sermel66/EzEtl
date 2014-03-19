@@ -14,7 +14,7 @@ namespace EZEtl.Configuration
         const int MaximumInheritance = 1;
 
         List<string> _knownConfigFilePathList;
-        XDocument _userConfigDocument;
+        XElement _userConfigDocument;
 
         Dictionary<string, IVariable> _variables = new Dictionary<string, IVariable>();
         public IEnumerable<string> VariableNames { get { return _variables.Keys; } }
@@ -43,6 +43,7 @@ namespace EZEtl.Configuration
         }
 
         Workflow.OperatorBlock _workFlowOperatorBlock;
+        public  Workflow.OperatorBlock OuterWorkflowOperatorBlock { get { return _workFlowOperatorBlock;}}
 
         List<string> _warningMessages = new List<string>();
         List<string> _errorMessages = new List<string>();
@@ -95,20 +96,52 @@ namespace EZEtl.Configuration
 
             _configurationHierarchy = configFilePath;
             _knownConfigFilePathList.Add(configFilePath);
-            _userConfigDocument = XDocument.Load(configFilePath);
+             
+             XDocument rawSourceFile = XDocument.Load(configFilePath);
+             foreach ( XElement element in rawSourceFile.Elements() )
+             {
+                 if (element.Name.ToString() == Constant.ConfigFileRoot)
+                     _userConfigDocument = element;
+             }
+
+             if (_userConfigDocument == null)
+             {
+                 _errorMessages.Add("No element " + Constant.ConfigFileRoot + " found in the file " + configFilePath);
+                 return;
+             }
+
             // TODO schema validation
 
-            // recursive call of the base
-            int baseItemsEncountered = 0;
-            foreach (XElement item in _userConfigDocument.Descendants(TopLevelItemEnum.Base.ToString()))
+            // Detect top level elements
+            List<string> unexpectedTopLevelElements = new List<string>();
+            Dictionary<TopLevelItemEnum, XElement> presentToplevelItems = new Dictionary<TopLevelItemEnum, XElement>();
+            string errorMessage;
+
+            foreach (XElement item in _userConfigDocument.Elements())
             {
-                baseItemsEncountered++;
-                if (baseItemsEncountered > MaximumInheritance)
-                    throw new ConfigurationException(String.Format("More than {0} Base nodes in the config file {1}", MaximumInheritance, configFilePath));
 
-                string baseFilePath = item.Attribute(AttributeNameEnum.file.ToString()).Value;
+                // try to match the item to the expected top level elements
+                TopLevelItemEnum topLevelItem = TopLevelItemEnum.UNKNOWN;
+                if (!Enum.TryParse<TopLevelItemEnum>(item.Name.ToString(), out topLevelItem))
+                {
+                    unexpectedTopLevelElements.Add(item.Name.ToString());
+                    continue;
+                }
+                presentToplevelItems.Add(topLevelItem, item); // TODO this would throw unclear message on duplicate elements
+            }
 
-                ConfigurationFile baseFile = new ConfigurationFile(baseFilePath, _knownConfigFilePathList);
+            if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Base))
+            {
+              //  string baseFilePath = 
+               XAttribute fileAttribute =  presentToplevelItems[TopLevelItemEnum.Base].Attribute(AttributeNameEnum.file.ToString());
+                if ( fileAttribute == null)
+                {
+                    _errorMessages.Add("Missing attribute [" + AttributeNameEnum.file.ToString() 
+                        + "] in element [" + fileAttribute.ToString().Substring(1, Constant.XmlQuoteLength));
+                    return;
+                }
+
+                ConfigurationFile baseFile = new ConfigurationFile(fileAttribute.Value, _knownConfigFilePathList);
 
                 // import base variables
                 foreach (string variableName in baseFile.VariableNames)
@@ -122,26 +155,6 @@ namespace EZEtl.Configuration
                     _modules.Add(moduleID, baseFile.Module(moduleID));
                 }
 
-                // TODO import workflow
-
-            }
-
-            // Loop through the remaining top level elements
-            List<string> unexpectedTopLevelElements = new List<string>();
-            Dictionary<TopLevelItemEnum, XElement> presentToplevelItems = new Dictionary<TopLevelItemEnum, XElement>();
-            string errorMessage;
-
-            foreach (XElement item in _userConfigDocument.Descendants())
-            {
-
-                // try to match the item to the expected top level elements
-                TopLevelItemEnum topLevelItem = TopLevelItemEnum.UNKNOWN;
-                if (!Enum.TryParse<TopLevelItemEnum>(item.Name.ToString(), out topLevelItem))
-                {
-                    unexpectedTopLevelElements.Add(item.Name.ToString());
-                    continue;
-                }
-                presentToplevelItems.Add(topLevelItem, item);
             }
 
             if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Variables))

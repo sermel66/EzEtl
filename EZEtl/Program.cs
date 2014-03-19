@@ -182,14 +182,13 @@ namespace EZEtl
                             Utilities.SimpleLog.MaxLoggingConsoleVerbosity = SimpleLogEventType.None;
                             break;
                     default:
-                            throw new Exception("Programmer's error: unexpected VerbosityLevel " + verbosityLevel.ToString());
+                            throw new NotImplementedException("VerbosityLevel = " + verbosityLevel.ToString());
                 }
 
                 _configurationFile = new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList);
-                if (! _configurationFile.IsValid)
+                if ( _configurationFile.IsValid)
                 {
-                    Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);
-                //    EZEtl.Workflow.c
+                    Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);               
                 }
                 else
                 {
@@ -199,7 +198,7 @@ namespace EZEtl
                 }
 
                 Utilities.SimpleLog.ToLog("Begin workflow execution", SimpleLogEventType.Trace);
-                EZEtl.Workflow.WorkflowProcess.Execute();
+                _configurationFile.OuterWorkflowOperatorBlock.Execute();
 
                 //PipeIn.SqlClientInput rdr = new PipeIn.SqlClientInput(1024, connectionString, query, 500);
 

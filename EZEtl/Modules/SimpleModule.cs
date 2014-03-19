@@ -21,6 +21,7 @@ namespace EZEtl.Modules
         public void Execute()
         {
             // TODO
+            throw new NotImplementedException();
         }
         
         public SimpleModule (IConfigurationParent parent, ModuleTypeEnum moduleType, string id, XElement xmlItemModule )

@@ -14,22 +14,31 @@ namespace EZEtl.Configuration.Misc
 
         public ConfigurationParentBase ( IConfigurationParent parent, string child )
         {
+
             if (string.IsNullOrWhiteSpace(child))
                 throw new ArgumentNullException("child");
 
-            _configurationHierarchy = Diagnostics.HierarchyConcat(parent.ConfigurationHierarchy, child);
+            CommonConstructor(parent, child);
         }
 
           public ConfigurationParentBase ( IConfigurationParent parent, string childType, string childId )
-          {
+          {         
+
               if (string.IsNullOrWhiteSpace(childId))
                   throw new ArgumentNullException("childId");
 
               if (string.IsNullOrWhiteSpace(childType))
                   throw new ArgumentNullException("childType");
 
-              _configurationHierarchy = Diagnostics.HierarchyConcat(parent.ConfigurationHierarchy, String.Format(ChildTypeIdJoinFormat,childType, childId));
+               CommonConstructor(parent, String.Format(ChildTypeIdJoinFormat,childType, childId));
+          }
 
+          private void CommonConstructor(IConfigurationParent parent, string child)
+          {
+              if (parent == null)
+                  throw new ArgumentNullException("parent");
+
+              _configurationHierarchy = Diagnostics.HierarchyConcat(parent.ConfigurationHierarchy, child);
           }
         
     }

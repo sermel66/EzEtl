@@ -21,8 +21,8 @@ namespace EZEtl.Workflow
 
         public virtual bool IsValid { get { return string.IsNullOrWhiteSpace(_errorMessage); } }
 
-        public OperatorBase(ConfigurationFile scope, IConfigurationParent parent, OperatorEnum operatorType, string qualifierID )
-            : base(parent, operatorType.ToString(), qualifierID)
+        public OperatorBase(ConfigurationFile scope, IConfigurationParent parent, string childType, string qualifierID )
+            : base(parent, childType, qualifierID)
         {
 
             if (scope == null)

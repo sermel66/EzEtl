@@ -9,29 +9,45 @@ using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Modules
 {
-    public class CompositeModule : ModuleBase,  IModule
+    public abstract class CompositeModule : ModuleBase, IModule
     {
 
+        public abstract List<TaskConfiguration> TaskConfigurationList { get; }
 
-        public bool IsValid { get { return false; } } // TODO
+        public bool IsValid
+        {
+            get
+            {
+                if ( TaskConfigurationList.Count() < 1)
+                    return false;
+
+                foreach (TaskConfiguration tc in TaskConfigurationList )
+                {
+                    if (!tc.IsValid)
+                        return false;
+                }
+
+                return true;
+            }
+        }
 
         public void OutputDiagnostics()
         {
-           // TODO _taskConfiguration.OutputDiagnostics();
+            foreach (TaskConfiguration tc in TaskConfigurationList)
+            {
+                tc.OutputDiagnostics();
+            }
         }
 
-        public void Execute()
-        {
-            // TODO
-        }
-
+        public abstract void Execute();
+     
 
         public CompositeModule(IConfigurationParent parent, ModuleTypeEnum moduleType, string id, XElement xmlItemModule)
-            : base (parent, moduleType, id)
+            : base(parent, moduleType, id)
         {
-          //  _taskConfiguration = new TaskConfiguration();
-        
-        
+            //  _taskConfiguration = new TaskConfiguration();
+            int i = 0;
+
         }
 
     }

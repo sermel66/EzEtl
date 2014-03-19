@@ -22,7 +22,7 @@ namespace EZEtl.Source
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            _batchSizeRows = (int)task.GetSetting(SettingNameEnum.BatchSizeRows).Value;
+            _batchSizeRows = (int)(task.GetSetting(SettingNameEnum.BatchSizeRows).Value);
 
             //string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
             //if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))

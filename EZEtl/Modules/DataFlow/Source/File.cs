@@ -28,7 +28,7 @@ namespace EZEtl.Source
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
-            _filePathPattern = (string)task.GetSetting(SettingNameEnum.FilePathPattern).Value;
+            _filePathPattern = (string)task.GetSetting(SettingNameEnum.FilePath).Value;
             _schemaIniTemplate = (string)task.GetSetting(SettingNameEnum.SchemaIniTemplate).Value;
             _tempFolder = (string)task.GetSetting(SettingNameEnum.TempFolder).Value;
 

@@ -2,7 +2,7 @@
 {
     public enum SettingNameEnum
     {
-        FilePathPattern,
+        FilePath,
         SchemaIniTemplate,
         TempFolder,
         Encoding,
@@ -17,6 +17,7 @@
         SqlNonQuery,
         Argument,
         Delimiter,
-        TextQualifier
+        TextQualifier,
+        Query
     }
 }
