@@ -32,16 +32,19 @@ namespace EZEtl.Destination
             _connection.Open();
             _transaction = _connection.BeginTransaction();
 
+ 
             _sbc = new SqlBulkCopy(_connection, SqlBulkCopyOptions.TableLock, _transaction);
             _sbc.DestinationTableName = (string)task.GetSetting(SettingNameEnum.TableName).Value;
             _sbc.BulkCopyTimeout = (int)task.GetSetting(SettingNameEnum.DbOperationTimeout).Value;
+
+            this.ExistingDataAction();
 
         }
 
 
         public override void WriteTableChunk(System.Data.DataTable tableChunk)
         {
-            // SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
+             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
 
             _sbc.WriteToServer(tableChunk);
         }
@@ -70,6 +73,7 @@ namespace EZEtl.Destination
 
             SqlCommand cmd = _connection.CreateCommand();
             cmd.CommandText = commandText;
+            cmd.Transaction = _transaction;
             cmd.ExecuteNonQuery();
 
             SimpleLog.ToLog("ExistingDataAction command Executed", SimpleLogEventType.Debug);

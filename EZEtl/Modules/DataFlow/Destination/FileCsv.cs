@@ -27,16 +27,10 @@ namespace EZEtl.Destination
         {
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             
-        //    if (! string.IsNullOrEmpty((string)task.GetSetting( SettingNameEnum.Delimiter).Value))
-                _delimiter = (string)task.GetSetting(SettingNameEnum.Delimiter).Value;
-            
-      //      if (string.IsNullOrEmpty((string)task.GetSetting(Configuration.Destination.FileSettingEnum.TextQualifier.ToString()).Value))
-                _textQualifier = (string)task.GetSetting(SettingNameEnum.TextQualifier).Value;
-             
+            _delimiter = (string)task.GetSetting(SettingNameEnum.Delimiter).Value;          
+            _textQualifier = (string)task.GetSetting(SettingNameEnum.TextQualifier).Value;
             _textQualifierSubstitute = _textQualifier + _textQualifier;
-
             _sw = new StreamWriter(base.OutputStream, _outputEncoding);
-
         }
 
         public override void WriteTableChunk(DataTable tableChunk)
@@ -70,11 +64,16 @@ namespace EZEtl.Destination
                 }
                 _sw.WriteLine();
             }
+
+            _sw.Flush();
         }
 
         private string FieldFormat(string field, bool isFirst)
         {
-            bool needToWrap = field.Contains(_delimiter) || char.IsWhiteSpace(field[0]) || char.IsWhiteSpace(field[field.Length - 1]);
+            bool needToWrap =
+                field.Length > 0 
+                &&
+               ( field.Contains(_delimiter) || char.IsWhiteSpace(field[0]) || char.IsWhiteSpace(field[field.Length - 1]) );
 
             return
                  (isFirst ? string.Empty : _delimiter)
@@ -83,6 +82,12 @@ namespace EZEtl.Destination
                + (needToWrap ? _textQualifier : string.Empty)
                ;
                 
+        }
+
+        public override void Close()
+        {
+            _sw.Close();
+            base.Close();
         }
 
     }

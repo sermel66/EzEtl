@@ -131,7 +131,6 @@ namespace EZEtl.Configuration
                     {
                         _settings[settingName].RawValue = itemValue;
 
-
                         if (_settingCount.ContainsKey(itemName))
                         {
                             _settingCount[itemName]++;

@@ -12,5 +12,6 @@ namespace EZEtl.Configuration
         ,Variables  = 1
         ,Modules    = 2
         ,Workflow   = 3
+        ,Diagnostics = 4
     }
 }

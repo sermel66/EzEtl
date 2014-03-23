@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EzEtl>
-  	
+
+  	<Diagnostics>
+		<LogFile>C:\temp\SqlToFile.log</LogFile>
+	</Diagnostics>
+	
   <Modules>
     <DataFlow ID="Download">
 

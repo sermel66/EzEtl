@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.SqlClient;
+using System.Data.Common;
 using System.Data;
 using Utilities;
 using EZEtl.Configuration;
@@ -13,7 +13,7 @@ namespace EZEtl.Source
     public class SqlClient : SourceBase
     {
     
-        SqlConnection _connection;
+        DbConnection _connection;
 
         public SqlClient(ITaskConfiguration task) : base(task)
         {
@@ -26,8 +26,16 @@ namespace EZEtl.Source
 
             string sqlCommand = task.GetSetting(SettingNameEnum.Query).Value.ToString();
 
-            _connection = new SqlConnection(connectionString.ConnectionString);
-            SqlCommand cmd = _connection.CreateCommand();
+            if (string.IsNullOrWhiteSpace(connectionString.ProviderName))
+            {
+                throw new EZEtlException("Connection string [" + connectionStringName + "] is missing Provider clause");
+            }
+          
+            DbProviderFactory factory = DbProviderFactories.GetFactory(connectionString.ProviderName);
+            _connection = factory.CreateConnection();
+            _connection.ConnectionString = connectionString.ConnectionString;
+           
+            DbCommand cmd = _connection.CreateCommand();
             cmd.CommandText = sqlCommand.Trim();
             if (cmd.CommandText.ToUpperInvariant().StartsWith("SELECT"))
                 cmd.CommandType = CommandType.Text;

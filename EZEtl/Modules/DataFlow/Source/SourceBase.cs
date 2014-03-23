@@ -20,35 +20,12 @@ namespace EZEtl.Source
 
         public SourceBase(ITaskConfiguration task)
         {
-            SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
-
             _batchSizeRows = (int)(task.GetSetting(SettingNameEnum.BatchSizeRows).Value);
-
-            //string batchSizeVariableValue = Configuration.Configuration.VariableValue(Configuration.ReservedVariableEnum.BatchSizeRows);
-            //if (!string.IsNullOrWhiteSpace(batchSizeVariableValue))
-            //{
-            //    bool parseResult = Int32.TryParse(batchSizeVariableValue, out _batchSizeRows);
-                
-            //     if (!parseResult || _batchSizeRows < 1)
-            //     {
-            //        throw new Configuration.ConfigurationException(
-            //                    "Value of the reserved variable " 
-            //                    + Configuration.ReservedVariableEnum.BatchSizeRows.ToString() 
-            //                    + " must be a positive integer"
-            //                    );
-            //     }
-            //}
-
-            //ISetting expansionSetting = (ISetting)task.Setting(Configuration.Source.SourceSettingEnum.Expansion.ToString()).Value;
-            //if (expansionSetting != null)
-            //{
-            //    _expansionAttribute = (Dictionary<ExpansionAttributeEnum, string>)expansionSetting.Value;
-            //}
         }
 
         public DataTable ReadBatch()
         {
-         //   SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
+            SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
             
             DataTable batchTable = NewDataTable;
             int rowCount = 0;

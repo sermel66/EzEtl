@@ -65,6 +65,7 @@
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
     <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
+    <Compile Include="Misc\Terminate.cs" />
     <Compile Include="Configuration\Misc\XmlUtil.cs" />
     <Compile Include="Configuration\Setting\ExpectedSetting.cs" />
     <Compile Include="Configuration\Setting\ISetting.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Modules\DataFlow\Source\SourceCommonConfiguration.cs" />
     <Compile Include="Modules\DataFlow\Source\SourceTaskEnum.cs" />
     <Compile Include="Modules\DataFlow\Source\FileTaskConfiguration.cs" />
+    <Compile Include="Modules\DataFlow\Source\SqlClientOri.cs" />
     <Compile Include="Modules\DataFlow\Source\SqlTaskConfiguration.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Configuration\Setting\Setting.cs" />

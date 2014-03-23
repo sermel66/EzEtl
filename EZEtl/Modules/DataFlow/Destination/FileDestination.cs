@@ -39,6 +39,7 @@ namespace EZEtl.Destination
 
         public override void Close()
         {
+            _outputStream.Flush();
             _outputStream.Close();
 
             if (File.Exists(_fqTargetFile))
@@ -47,6 +48,7 @@ namespace EZEtl.Destination
                 File.Delete(_fqTargetFile);
             }
 
+            SimpleLog.ToLog("Renaming temp file to the target file " + _fqTargetFile, SimpleLogEventType.Information);
             System.IO.File.Move(_fqTempFile, _fqTargetFile);
             this.Dispose();
         }

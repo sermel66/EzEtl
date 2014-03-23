@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EzEtl>
+ 	
+  <Modules>
+    <DataFlow ID="Upload">
+      <Source ID="File">
+        <FilePath>C:\temp\EzEtl\PipeOut.csv</FilePath>
+        <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
+        <Encoding>ASCII</Encoding>
+		<BatchSizeRows type="Int32">1000000</BatchSizeRows>
+      </Source>
+
+      <Destination ID="SqlBulk">
+        <ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <TableName>dbo.AdHoc2</TableName>
+		<ExistingDataAction>Truncate</ExistingDataAction>
+        <DbOperationTimeout>1500</DbOperationTimeout>
+		<OneDebugMessagePerBatchCount>1</OneDebugMessagePerBatchCount>
+      </Destination>
+
+    </DataFlow>
+	
+	<SqlExec ID="ProcessFeed">
+		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
+		 <SqlNonQuery command="dbo.AdHocLoad">
+		 	 <Argument  name="@FeedName" value="${FeedName}" direction="INPUT" />
+			 <Argument  name="@StartDate" value="${StartDate}" direction="OUTPUT" />	 
+		 </SqlNonQuery>
+	</SqlExec>
+	
+	<!--
+		
+	
+	<SqlExec ID="GetStartDate">
+		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
+		 <SqlNonQuery command="dbo.StartDate">
+			<Argument name="@FeedName" value="${FeedName}" direction="INPUT" />
+			<Argument name="@StartDate" value="${StartDate}" direction="OUTPUT" />
+		</SqlNonQuery>
+	</SqlExec>
+	-->
+	
+  </Modules>
+
+  <Workflow>
+		<ExecuteModule ID="Upload" />
+		<ExecuteModule ID="ProcessFeed" />
+  </Workflow>
+  
+  
+</EzEtl>

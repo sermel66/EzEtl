@@ -22,6 +22,7 @@ namespace EZEtl.Configuration.Settings
        {
             get { return _rawValue; } 
             set {
+
                 _rawValue = value;
                 _isPresent = true;
              

@@ -48,29 +48,23 @@ namespace Utilities
             if (!IsInitialized)
                 return;
 
+            string formattedMessage = string.Format(LogFormat,
+                     DateTime.UtcNow.ToString("o"),
+                     entryType,
+                     message);
+
             if (entryType <= _maxLoggingConsoleVerbosity)
-                Console.WriteLine(message);
+                Console.WriteLine(formattedMessage);
 
             if (entryType > _maxLoggingVerbosity)
                 return;
 
             string fqPath = _fqLogFilePath + (_withThreading ? "." + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() : string.Empty);
-
             using (StreamWriter sw = File.AppendText(fqPath))
             {
-                sw.WriteLine(
-                    string.Format(LogFormat,
-                     DateTime.UtcNow.ToString("o"),
-                     entryType,
-                     message)
-                );
-
+                sw.WriteLine(formattedMessage);
                 sw.Flush();
-
             }
         }
-
-
-
     }
 }

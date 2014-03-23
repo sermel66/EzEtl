@@ -22,7 +22,7 @@ namespace EZEtl.Modules.SqlExec
         {
 
             _taskConfiguration.AddSetting(new Setting<string>(parent, SettingNameEnum.ConnectionStringName, SettingTypeEnum.String, false));
-        // TODO    _taskConfiguration.AddSetting(new Setting<SqlQuerySetting>(parent, SettingNameEnum.SqlNonQuery, SettingTypeEnum.SqlQuerySetting, false));
+         //   _taskConfiguration.AddSetting(new Setting<SqlQuerySetting>(parent, SettingNameEnum.SqlNonQuery, SettingTypeEnum.SqlQuerySetting, false));
 
 
             _taskConfiguration.Parse(xmlItemModule);

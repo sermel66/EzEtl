@@ -12,9 +12,8 @@ namespace EZEtl.Source
        
         public static void Configure ( TaskConfiguration task )
         {
-        //    task.AddSetting(new Setting<string>(task, SettingNameEnum.ConnectionStringName, SettingTypeEnum.String, false));
-        //    task.AddSetting(new Setting<string>(task, SettingNameEnum.Query, SettingTypeEnum.String, false));
-
+            task.AddSetting(new Setting<string>(task, SettingNameEnum.FilePath, SettingTypeEnum.String, false));
+            task.AddSetting(new Setting<string>(task, SettingNameEnum.SchemaIniTemplate, SettingTypeEnum.String, true, string.Empty));
             task.SetConstructor(typeof(File));
         }
 
