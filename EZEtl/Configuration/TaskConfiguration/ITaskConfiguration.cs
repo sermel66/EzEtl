@@ -8,7 +8,7 @@ namespace EZEtl.Configuration
     {
        DataFlowStepEnum DataFlowStep {get;}
        string TaskID { get; }
-       ISetting GetSetting(SettingNameEnum settingName);
+       Setting.ISetting GetSetting(SettingNameEnum settingName);
        IEnumerable<SettingNameEnum> SettingNameList { get; }
        void Parse(XElement item);
        object Instantiate();

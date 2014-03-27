@@ -1,5 +1,5 @@
 ﻿using EZEtl.Configuration;
-using EZEtl.Configuration.Settings;
+using EZEtl.Configuration.Setting;
 
 namespace EZEtl.Destination
 {
@@ -9,8 +9,8 @@ namespace EZEtl.Destination
         {
             FileTaskConfiguration.Configure(task);
 
-            task.AddSetting(new Setting<string>(task, SettingNameEnum.Delimiter, SettingTypeEnum.Int32, false));
-            task.AddSetting(new Setting<string>(task, SettingNameEnum.TextQualifier, SettingTypeEnum.Int32, false));
+            task.AddSetting(new SimpleSetting<string>(task, SettingNameEnum.Delimiter, SettingTypeEnum.Int32, false));
+            task.AddSetting(new SimpleSetting<string>(task, SettingNameEnum.TextQualifier, SettingTypeEnum.Int32, false));
 
             task.SetConstructor(typeof(FileCsv));
         }

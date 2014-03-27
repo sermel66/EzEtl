@@ -1,4 +1,4 @@
-﻿using EZEtl.Configuration.Settings;
+﻿using EZEtl.Configuration.Setting;
 using EZEtl.Misc;
 using System;
 using System.Collections.Generic;

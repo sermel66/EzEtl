@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using EZEtl.Configuration.Misc;
 
-namespace EZEtl.Configuration.Settings
+namespace EZEtl.Configuration.Setting
 {
     public abstract class SettingBase : ConfigurationParentBase
     {
@@ -27,9 +27,9 @@ namespace EZEtl.Configuration.Settings
 
         protected string _warning = string.Empty;
         protected string _errorMessage = string.Empty;
-        protected string _rawValue;
+        protected XElement _rawValue;
 
-        public void OutputDiagnostics()
+        public virtual void OutputDiagnostics()
         {
             if ( ! (_isOptional || _isPresent))
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Required setting is not provided");
@@ -44,18 +44,27 @@ namespace EZEtl.Configuration.Settings
         public bool IsPresent { get { return _isPresent; } }
 
         protected bool _isValid = false;
-        public bool IsValid { get { return (_isOptional || _isPresent ) && _isValid; } }
+        public virtual bool IsValid { get { return (_isOptional || _isPresent ) && _isValid; } }
 
         protected void SetBadConversionMessage(string toType)
         {
             _errorMessage = @"Invalid value of the setting " + this.SettingName.ToString()
-                        + @": Can not convert value [" + _rawValue.Substring(1, Constant.XmlQuoteLength)
-                        + (_rawValue.Length > Constant.XmlQuoteLength ? "..." : string.Empty)
+                        + @": Can not convert value [" + _rawValue.Value.Substring(0, Constant.XmlQuoteLength)
+                        + (_rawValue.Value.Length > Constant.XmlQuoteLength ? "..." : string.Empty)
                         + @"] to type "
                         + toType;
 
             _isValid = false;
         }
 
+        protected void SetError(string errorMessage)
+        {
+            _errorMessage = @"Error """ + errorMessage + @""" in setting " + this.SettingName.ToString()
+                        + @" [" + _rawValue.ToString().Substring(0, Constant.XmlQuoteLength)
+                        + (_rawValue.ToString().Length > Constant.XmlQuoteLength ? "..." : string.Empty)
+                       ;
+
+            _isValid = false;
+        }
     }
 }

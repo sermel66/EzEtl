@@ -18,6 +18,11 @@
         Argument,
         Delimiter,
         TextQualifier,
-        Query
+        Query,
+        Command,
+        CommandText,
+        Name,
+        Value,
+        Direction
     }
 }

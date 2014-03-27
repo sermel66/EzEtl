@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EZEtl.Configuration;
-using EZEtl.Configuration.Settings;
+using EZEtl.Configuration.Setting;
 using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Destination
@@ -12,10 +12,10 @@ namespace EZEtl.Destination
     {
         public static void Configure(TaskConfiguration task)
         {
-            task.AddSetting(new Setting<ExistingDataActionEnum>(task, SettingNameEnum.ExistingDataAction, SettingTypeEnum.Int32, true,
+            task.AddSetting(new SimpleSetting<ExistingDataActionEnum>(task, SettingNameEnum.ExistingDataAction, SettingTypeEnum.Int32, true,
                 Defaults.ExistingDataAction));
 
-            task.AddSetting(new Setting<Int32>(task, SettingNameEnum.OneDebugMessagePerBatchCount, SettingTypeEnum.Int32, true,
+            task.AddSetting(new SimpleSetting<Int32>(task, SettingNameEnum.OneDebugMessagePerBatchCount, SettingTypeEnum.Int32, true,
                 Defaults.OneDebugMessagePerBatchCount));
         }
     }

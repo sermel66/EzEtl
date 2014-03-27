@@ -5,7 +5,7 @@
 //using System.Data;
 //using Utilities;
 //using EZEtl.Configuration;
-//using EZEtl.Configuration.Settings;
+//using EZEtl.Configuration.Setting;
 //using EZEtl;
 
 //namespace EZEtl.Source

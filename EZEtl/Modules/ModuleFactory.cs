@@ -41,8 +41,8 @@ namespace EZEtl.Modules
                case ModuleTypeEnum.DataFlow:
                    return new DataFlow.DataFlowModule(parent, moduleType, idAttribute.Value, xmlItemModule);
 
-               case ModuleTypeEnum.SqlExec:
-                   return new SqlExec.SqlExecModule(parent, moduleType, idAttribute.Value, xmlItemModule);
+               case ModuleTypeEnum.SqlNonQuery:
+                   return new SqlNonQueryModule(parent, moduleType, idAttribute.Value, xmlItemModule);
 
                default:
                    throw new Utilities.AssertViolationException("Unexpected moduleType " + moduleType.ToString());

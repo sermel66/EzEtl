@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Misc\ArgumentDirectionEnum.cs" />
     <Compile Include="Configuration\Misc\AttributeNameEnum.cs" />
     <Compile Include="Configuration\ConfigurationFile.cs" />
     <Compile Include="Configuration\Misc\ConfigurationException.cs" />
@@ -65,9 +66,11 @@
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
     <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
+    <Compile Include="Configuration\Setting\SettingListBase.cs" />
+    <Compile Include="Configuration\Setting\NestedSetting.cs" />
+    <Compile Include="Configuration\Setting\StoredProcedureArgumentSettingList.cs" />
     <Compile Include="Misc\Terminate.cs" />
     <Compile Include="Configuration\Misc\XmlUtil.cs" />
-    <Compile Include="Configuration\Setting\ExpectedSetting.cs" />
     <Compile Include="Configuration\Setting\ISetting.cs" />
     <Compile Include="Configuration\TaskConfiguration\ITaskConfiguration.cs" />
     <Compile Include="Expressions\Arithmetic.cs" />
@@ -91,7 +94,7 @@
     <Compile Include="Modules\DataFlow\Source\SqlClientOri.cs" />
     <Compile Include="Modules\DataFlow\Source\SqlTaskConfiguration.cs" />
     <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Configuration\Setting\Setting.cs" />
+    <Compile Include="Configuration\Setting\SimpleSetting.cs" />
     <Compile Include="Configuration\Setting\SettingBase.cs" />
     <Compile Include="Configuration\TaskConfiguration\TaskConfiguration.cs" />
     <Compile Include="Configuration\Misc\DataFlowStepEnum.cs" />
@@ -139,9 +142,8 @@
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ModuleFactory.cs" />
     <Compile Include="Modules\SimpleModule.cs" />
-    <Compile Include="Modules\SqlExec\SqlArgumentSetting.cs" />
-    <Compile Include="Modules\SqlExec\SqlExecModule.cs" />
-    <Compile Include="Modules\SqlExec\SqlQuerySetting.cs" />
+    <Compile Include="Modules\SqlExec\SqlNonQueryModule.cs" />
+    <Compile Include="Modules\Util\DbProviderConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workflow\ForLoop.cs" />

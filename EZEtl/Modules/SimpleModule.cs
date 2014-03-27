@@ -18,12 +18,8 @@ namespace EZEtl.Modules
             _taskConfiguration.OutputDiagnostics();
         }
 
-        public void Execute()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-        
+        public abstract void Execute();
+       
         public SimpleModule (IConfigurationParent parent, ModuleTypeEnum moduleType, string id, XElement xmlItemModule )
             : base (parent, moduleType, id)
         {

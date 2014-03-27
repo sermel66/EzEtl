@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using EZEtl.Configuration.Settings;
+using EZEtl.Configuration.Setting;
 using EZEtl.Configuration.Misc;
 using System.Linq.Expressions;
 
@@ -24,6 +24,8 @@ namespace EZEtl.Configuration
         public string TaskID { get { return _taskID; } }
 
         Func<ITaskConfiguration, object> _instantiator;
+        bool _needsInstantiator = true;
+        public bool NeedsInstantiator { get { return _needsInstantiator; } set { _needsInstantiator = value; } }
 
         public IEnumerable<SettingNameEnum> SettingNameList
         {
@@ -51,7 +53,7 @@ namespace EZEtl.Configuration
         {
             get
             {
-                if (_instantiator == null)
+                if (_needsInstantiator && _instantiator == null)
                     return false;
 
                 foreach (KeyValuePair<SettingNameEnum, ISetting> entry in _settings)
@@ -75,7 +77,7 @@ namespace EZEtl.Configuration
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
             }
 
-            if ( _instantiator == null)
+            if (_needsInstantiator && _instantiator == null)
             {
                 Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Instantiator not set");
             }
@@ -90,21 +92,6 @@ namespace EZEtl.Configuration
             _dataFlowStep = dataFlowStep;
             _taskID = taskID;
         }
- 
-
-        //public IEnumerable<string> ConfiguredSettings { get { return _settings.Keys; } }
-        //protected void AddSetting(ISetting setting)
-        //{
-        //    if (setting == null)
-        //        throw new ArgumentNullException("setting");
-
-        //    if (_settings.ContainsKey(setting.Key))
-        //        throw new ConfigurationException("Attempt to register setting " + setting.Key + " multiple times");
-
-        //    _settings.Add(setting.Key, setting);
-        //}
-
-
 
         public virtual void Parse(XElement body)
         {
@@ -119,17 +106,9 @@ namespace EZEtl.Configuration
                 SettingNameEnum settingName;
                 if (Enum.TryParse<SettingNameEnum>(itemName, out settingName))
                 {
-                    string itemValue = string.Empty;
-
-                    //if (item.HasAttributes || item.HasElements)
-                    //    itemValue = item.ToString();
-                    //else 
-                    if (!item.IsEmpty)
-                        itemValue = item.Value;
-
                     if (_settings.ContainsKey(settingName))
                     {
-                        _settings[settingName].RawValue = itemValue;
+                        _settings[settingName].RawValue = item;
 
                         if (_settingCount.ContainsKey(itemName))
                         {
@@ -140,7 +119,6 @@ namespace EZEtl.Configuration
 
                         continue;
                     }
-
                 }
                 else
                 {
@@ -148,7 +126,6 @@ namespace EZEtl.Configuration
                     {
                         _unexpectedSettings.Add(itemName);
                     }
-
                 }
 
             }
@@ -173,6 +150,9 @@ namespace EZEtl.Configuration
 
         public object Instantiate()
         {
+            if (_instantiator == null)
+                throw new EZEtlException("Instantiate() called with uninitialized _instantiator");
+
             return _instantiator(this);
       
         }

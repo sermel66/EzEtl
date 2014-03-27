@@ -1,6 +1,7 @@
 ﻿using EZEtl.Configuration.Misc;
+using System.Xml.Linq;
 
-namespace EZEtl.Configuration
+namespace EZEtl.Configuration.Setting
 {
     public interface ISetting : IDiagnosable, IConfigurationParent 
     {
@@ -10,6 +11,7 @@ namespace EZEtl.Configuration
         SettingNameEnum SettingName { get; }
         SettingTypeEnum SettingType { get; }
         object Value { get; }
-        string RawValue { get; set; }
+        XElement RawValue { get; set; }
+
     }
 }

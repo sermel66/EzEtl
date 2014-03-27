@@ -7,7 +7,7 @@
         <FilePath>C:\temp\EzEtl\PipeOut.csv</FilePath>
         <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
         <Encoding>ASCII</Encoding>
-		<BatchSizeRows type="Int32">1000000</BatchSizeRows>
+		<BatchSizeRows>1000000</BatchSizeRows>
       </Source>
 
       <Destination ID="SqlBulk">
@@ -20,13 +20,22 @@
 
     </DataFlow>
 	
-	<SqlExec ID="ProcessFeed">
-		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
-		 <SqlNonQuery command="dbo.AdHocLoad">
-		 	 <Argument  name="@FeedName" value="${FeedName}" direction="INPUT" />
-			 <Argument  name="@StartDate" value="${StartDate}" direction="OUTPUT" />	 
-		 </SqlNonQuery>
-	</SqlExec>
+	<SqlNonQuery ID="ProcessFeed">
+		<ConnectionStringName>MyLocalSql</ConnectionStringName>
+		<Command>
+			<CommandText>dbo.AdHocLoad</CommandText>
+			<Argument>
+				<Name>FeedName</Name>
+				<Value>AdHocTest</Value>
+				<Direction>INPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>FeedDate</Name>
+				<Value>2014-03-23</Value>
+				<Direction>INPUT</Direction>
+			</Argument>
+		</Command>
+	</SqlNonQuery>
 	
 	<!--
 		
@@ -38,12 +47,14 @@
 			<Argument name="@StartDate" value="${StartDate}" direction="OUTPUT" />
 		</SqlNonQuery>
 	</SqlExec>
+	
+	
+			<ExecuteModule ID="Upload" />
 	-->
 	
   </Modules>
 
   <Workflow>
-		<ExecuteModule ID="Upload" />
 		<ExecuteModule ID="ProcessFeed" />
   </Workflow>
   

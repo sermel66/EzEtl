@@ -3,6 +3,6 @@
     public enum ModuleTypeEnum
     {
          DataFlow
-        ,SqlExec
+        ,SqlNonQuery
     }
 }
