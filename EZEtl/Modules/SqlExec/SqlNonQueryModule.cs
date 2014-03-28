@@ -39,6 +39,7 @@ namespace EZEtl.Modules
 
             // Connection
             _taskConfiguration.AddSetting(new SimpleSetting<string>(_taskConfiguration, SettingNameEnum.ConnectionStringName, SettingTypeEnum.String, false));
+            _taskConfiguration.AddSetting(new SimpleSetting<int>(_taskConfiguration, SettingNameEnum.DbOperationTimeout, SettingTypeEnum.String, true, Defaults.DbOperationTimeout));
 
             // Command
             _commandSetting = new NestedSetting(_taskConfiguration, SettingNameEnum.Command, false);
@@ -72,6 +73,8 @@ namespace EZEtl.Modules
                 else
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.CommandTimeout = (int)_taskConfiguration.GetSetting(SettingNameEnum.DbOperationTimeout).Value;
+
                 ISetting argumentListSetting = _commandSetting.GetSetting(Configuration.SettingNameEnum.Argument);
                 List<ISetting> args = (List<ISetting>)argumentListSetting.Value;
 
@@ -84,7 +87,6 @@ namespace EZEtl.Modules
                     par.Direction = (ParameterDirection)argSetting.GetSetting(SettingNameEnum.Direction).Value;
 
                     cmd.Parameters.Add(par);
-
                 }
 
                 int rc=int.MinValue;

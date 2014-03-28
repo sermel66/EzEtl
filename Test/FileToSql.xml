@@ -4,7 +4,7 @@
   <Modules>
     <DataFlow ID="Upload">
       <Source ID="File">
-        <FilePath>C:\temp\EzEtl\PipeOut.csv</FilePath>
+        <FilePath>C:\temp\EzEtl\PipeOut_1-2-3.csv</FilePath>
         <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
         <Encoding>ASCII</Encoding>
 		<BatchSizeRows>1000000</BatchSizeRows>
@@ -22,6 +22,7 @@
 	
 	<SqlNonQuery ID="ProcessFeed">
 		<ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <DbOperationTimeout>1500</DbOperationTimeout>
 		<Command>
 			<CommandText>dbo.AdHocLoad</CommandText>
 			<Argument>
@@ -49,13 +50,14 @@
 	</SqlExec>
 	
 	
-			<ExecuteModule ID="Upload" />
+			
 	-->
 	
   </Modules>
 
   <Workflow>
-		<ExecuteModule ID="ProcessFeed" />
+	<ExecuteModule ID="Upload" />
+	<ExecuteModule ID="ProcessFeed" />
   </Workflow>
   
   

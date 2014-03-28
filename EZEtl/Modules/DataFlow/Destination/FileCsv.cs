@@ -65,7 +65,6 @@ namespace EZEtl.Destination
                 _sw.WriteLine();
             }
 
-            _sw.Flush();
         }
 
         private string FieldFormat(string field, bool isFirst)

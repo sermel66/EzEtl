@@ -39,8 +39,7 @@ namespace EZEtl.Destination
 
         public override void Close()
         {
-            _outputStream.Flush();
-            _outputStream.Close();
+           _outputStream.Close();
 
             if (File.Exists(_fqTargetFile))
             {

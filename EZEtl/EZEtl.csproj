@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Misc\AppConfigSettingEnum.cs" />
     <Compile Include="Configuration\Misc\ArgumentDirectionEnum.cs" />
     <Compile Include="Configuration\Misc\AttributeNameEnum.cs" />
     <Compile Include="Configuration\ConfigurationFile.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Configuration\Misc\ExistingDataActionEnum.cs" />
     <Compile Include="Configuration\Misc\IDiagnosable.cs" />
     <Compile Include="Configuration\Misc\IConfigurationParent.cs" />
+    <Compile Include="Configuration\Misc\AppConfig.cs" />
     <Compile Include="Configuration\Misc\MessageSeverityEnum.cs" />
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />

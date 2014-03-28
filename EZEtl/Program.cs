@@ -31,18 +31,12 @@ namespace EZEtl
             try
             {
 
+                string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 
-                //string logFileTimeStamp = DateTime.UtcNow.ToString(LogFileTimeStampFormat);
-                //string fqLogFilePath = String.Format(@"C:\Temp\EzEtl\ExEtl_{0}.log", logFileTimeStamp);
-
-                //SimpleLogEventType maxLoggingVerbosity = SimpleLogEventType.Debug;
-                //SimpleLog.SetUpLog(fqLogFilePath, maxLoggingVerbosity, true);
-
-
-                string configFilePath = string.Empty; // = @"C:\Users\sergey\Source\Repos\EzEtl\Test\AdHoc_take2.xml";
+                string configFilePath = string.Empty;
                 List<string> processedConfigFilePathList = null;
-            //    Configuration.ConfigurationFile configuration;
+
                 VerbosityLevel verbosityLevel = VerbosityLevel.Quiet;
                 DateTime dateIteratorFixedValue = DateTime.MinValue;
                 List<string> commandLineErrorMessages = new List<string>();
@@ -185,6 +179,10 @@ namespace EZEtl
                             throw new NotImplementedException("VerbosityLevel = " + verbosityLevel.ToString());
                 }
 
+                Utilities.SimpleLog.ToLog("EzETL Version " + version, SimpleLogEventType.Information);
+
+                EZEtl.Configuration.Misc.AppConfig.Load();
+
                 _configurationFile = new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList);
                 if ( _configurationFile.IsValid)
                 {
@@ -199,14 +197,6 @@ namespace EZEtl
 
                 Utilities.SimpleLog.ToLog("Begin workflow execution", SimpleLogEventType.Trace);
                 _configurationFile.OuterWorkflowOperatorBlock.Execute();
-
-                //PipeIn.SqlClientInput rdr = new PipeIn.SqlClientInput(1024, connectionString, query, 500);
-
-                //PipeOut.FileCsvOutput wrt = new PipeOut.FileCsvOutput(rdr, @"C:\Temp\EzEtl\PipeOut.csv", @",", @"""");
-
-                // /* Task task = Task.Run(() => */ wrt.ExecuteAsync()/*)*/;
-                ///*  Task.WaitAll(task); */
-                //  wrt.Close();
 
                 return ExitCodes.Success;
 

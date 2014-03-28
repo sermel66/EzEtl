@@ -42,7 +42,7 @@ namespace EZEtl.Source
   
             string connectionString = cs.ConnectionString.Replace(FolderPlaceHolder, actualFolder);
             Utilities.SimpleLog.ToLog("Connection string: " + connectionString, SimpleLogEventType.Debug);
-            string query = "SELECT * FROM " + actualFileName; // TODO consider another option for the column list
+            string query = "SELECT * FROM [" + actualFileName + "]"; // TODO consider another option for the column list
             Utilities.SimpleLog.ToLog("Query: " + query, SimpleLogEventType.Debug);
 
             _connection = new OleDbConnection(connectionString);
