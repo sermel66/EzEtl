@@ -22,7 +22,10 @@
         Command,
         CommandText,
         Name,
-        Value,
+        DbType,
+        Size,
+        InputValue,
+        OutputVariable,
         Direction
     }
 }

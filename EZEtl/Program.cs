@@ -6,6 +6,7 @@ using Utilities;
 using System.Threading.Tasks;
 using EZEtl.Misc;
 using EZEtl.Configuration;
+using EZEtl.Configuration.Misc;
 
 namespace EZEtl
 {
@@ -30,9 +31,9 @@ namespace EZEtl
         {
             try
             {
-
+                string programName = "EzETL";
                 string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
+                
 
                 string configFilePath = string.Empty;
                 List<string> processedConfigFilePathList = null;
@@ -179,18 +180,25 @@ namespace EZEtl
                             throw new NotImplementedException("VerbosityLevel = " + verbosityLevel.ToString());
                 }
 
-                Utilities.SimpleLog.ToLog("EzETL Version " + version, SimpleLogEventType.Information);
+                Utilities.SimpleLog.ToLog( programName + " Version " + version, SimpleLogEventType.Information);
 
                 EZEtl.Configuration.Misc.AppConfig.Load();
 
                 _configurationFile = new Configuration.ConfigurationFile(configFilePath, processedConfigFilePathList);
                 if ( _configurationFile.IsValid)
                 {
-                    Utilities.SimpleLog.ToLog("Configration Loaded", SimpleLogEventType.Trace);               
+
+                    if (Configuration.OuterWorkflowOperatorBlock == null)
+                    {
+                        Diagnostics.Output(programName, MessageSeverityEnum.Error, "Configuration section " + TopLevelItemEnum.Workflow.ToString() + " is missing" );
+                        return ExitCodes.Failure;
+                    }
+
+                    Utilities.SimpleLog.ToLog("Configuration Loaded", SimpleLogEventType.Trace);               
                 }
                 else
                 {
-                    Utilities.SimpleLog.ToLog("Configration is invalid", SimpleLogEventType.Trace);
+                    Utilities.SimpleLog.ToLog("Configuration is invalid", SimpleLogEventType.Trace);
                     _configurationFile.OutputDiagnostics();
                     return ExitCodes.Failure;
                 }

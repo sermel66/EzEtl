@@ -8,12 +8,12 @@ using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Configuration.Setting
 {
-    public abstract class SettingListBase : SettingBase, ISetting
+    public abstract class SettingListBase : SettingBase
     {
 
        List<ISetting> _settings = new List<ISetting>();
 
-       public object Value { get { return _settings; } }
+       public override object Value { get { return _settings; } }
        public IEnumerable<SettingNameEnum> SettingNameList
        {
            get
@@ -26,7 +26,7 @@ namespace EZEtl.Configuration.Setting
        {
            get
            {
-               if (_errorMessage.Length > 0)
+               if (!base.IsValid)
                    return false;
 
                foreach (ISetting entry in _settings)
@@ -40,19 +40,16 @@ namespace EZEtl.Configuration.Setting
 
        public override void OutputDiagnostics()
        {
+           base.OutputDiagnostics();
+
            foreach (ISetting entry in _settings)
            {
                entry.OutputDiagnostics();
            }
-
-           if (_errorMessage.Length > 0)
-           {
-               Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
-           }
        }
-        
-      
-       public XElement RawValue
+
+
+       public override XElement RawValue
        {
             get { return _rawValue; } 
             set {
@@ -72,6 +69,7 @@ namespace EZEtl.Configuration.Setting
 
                 newSettingInstance.RawValue = value;
                 _isPresent = true;
+                _isValid = true; // only indicates that the list has been initialized, real validity check is done on each element
 
                 _settings.Add(newSettingInstance);
              }

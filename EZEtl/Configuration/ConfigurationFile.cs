@@ -60,10 +60,10 @@ namespace EZEtl.Configuration
                         return false;
                 }
 
-                if (_workFlowOperatorBlock == null)
-                    return false;
+                if (_workFlowOperatorBlock != null)
+                    return _workFlowOperatorBlock.IsValid;
 
-                return _workFlowOperatorBlock.IsValid;
+                return true;
             }
         }
 
@@ -81,7 +81,6 @@ namespace EZEtl.Configuration
 
             if (_workFlowOperatorBlock != null)
                 _workFlowOperatorBlock.OutputDiagnostics();
-
         }
 
         public ConfigurationFile(string configFilePath, List<string> processedConfigFilePathList)
@@ -132,16 +131,16 @@ namespace EZEtl.Configuration
 
             if (presentToplevelItems.ContainsKey(TopLevelItemEnum.Base))
             {
-              //  string baseFilePath = 
-               XAttribute fileAttribute =  presentToplevelItems[TopLevelItemEnum.Base].Attribute(AttributeNameEnum.file.ToString());
-                if ( fileAttribute == null)
-                {
-                    _errorMessages.Add("Missing attribute [" + AttributeNameEnum.file.ToString() 
-                        + "] in element [" + fileAttribute.ToString().Substring(1, Constant.XmlQuoteLength));
+              
+               string fileAttribute;// =  presentToplevelItems[TopLevelItemEnum.Base].Attribute(AttributeNameEnum.file.ToString());
+               string attrNotFoundErrorMessage;
+               if (!XmlUtil.TryGetAttribute(presentToplevelItems[TopLevelItemEnum.Base], AttributeNameEnum.file, out fileAttribute, out attrNotFoundErrorMessage))
+               {
+                    _errorMessages.Add(attrNotFoundErrorMessage);
                     return;
                 }
 
-                ConfigurationFile baseFile = new ConfigurationFile(fileAttribute.Value, _knownConfigFilePathList);
+                ConfigurationFile baseFile = new ConfigurationFile(fileAttribute, _knownConfigFilePathList);
 
                 // import base variables
                 foreach (string variableName in baseFile.VariableNames)

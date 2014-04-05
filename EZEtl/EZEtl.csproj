@@ -68,9 +68,13 @@
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
     <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
+    <Compile Include="Configuration\Setting\DummyValidator.cs" />
+    <Compile Include="Configuration\Setting\ISettingValidator.cs" />
     <Compile Include="Configuration\Setting\SettingListBase.cs" />
     <Compile Include="Configuration\Setting\NestedSetting.cs" />
+    <Compile Include="Configuration\Setting\SettingValidatorBase.cs" />
     <Compile Include="Configuration\Setting\StoredProcedureArgumentSettingList.cs" />
+    <Compile Include="Configuration\Variables\VariableNameCheck.cs" />
     <Compile Include="Misc\Terminate.cs" />
     <Compile Include="Configuration\Misc\XmlUtil.cs" />
     <Compile Include="Configuration\Setting\ISetting.cs" />
@@ -145,6 +149,7 @@
     <Compile Include="Modules\ModuleFactory.cs" />
     <Compile Include="Modules\SimpleModule.cs" />
     <Compile Include="Modules\SqlExec\SqlNonQueryModule.cs" />
+    <Compile Include="Configuration\Variables\DefinedVariableValidator.cs" />
     <Compile Include="Modules\Util\DbProviderConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

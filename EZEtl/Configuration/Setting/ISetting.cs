@@ -13,5 +13,7 @@ namespace EZEtl.Configuration.Setting
         object Value { get; }
         XElement RawValue { get; set; }
 
+        ISettingValidator Validator { set; }
+
     }
 }

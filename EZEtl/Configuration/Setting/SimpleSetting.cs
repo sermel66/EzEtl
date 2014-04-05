@@ -8,7 +8,7 @@ using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Configuration.Setting
 {
-    public class SimpleSetting<T> : SettingBase, ISetting
+    public class SimpleSetting<T> : SettingBase
     {
        Type _type;
        public Type ValueType { get { return _type; } }
@@ -17,9 +17,9 @@ namespace EZEtl.Configuration.Setting
        T _value;
        T _initValue;  // autoinitialized
 
-       public object Value { get { return _value; } }
-      
-       public XElement RawValue 
+       public override object Value { get { return _value; } }
+
+       public override XElement RawValue 
        {
             get { return _rawValue; } 
             set {

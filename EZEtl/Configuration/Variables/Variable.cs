@@ -18,12 +18,25 @@ namespace EZEtl.Configuration
 
         T _value;
         public T TypedValue { get { return _value; } set { _value = value; } }
-        public object Value { get { return _value; } set { _value = (T)value; } }
+        public object Value
+        {
+            get { return _value; }
+            set
+            {
+                if (value is T)
+                    _value = (T)value;
+                else
+                {
+                    EZEtl.Misc.Terminate.FatalError("Attempt to assign variable " + Name + " of type " + VariableTypeName + " value of type "
+                        +  value.GetType().Name);
+                }
+            }
+        }
 
         bool _isImmutable = false;
         public bool IsImmutable { get { return _isImmutable; } }
 
-        public Variable ( string name, SupportedVariableTypeEnum variableTypeName,T value)
+        public Variable(string name, SupportedVariableTypeEnum variableTypeName, T value)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException("name");
@@ -32,6 +45,6 @@ namespace EZEtl.Configuration
             _variableTypeName = variableTypeName;
             _value = value;
             _type = typeof(T);
-        }        
+        }
     }
 }

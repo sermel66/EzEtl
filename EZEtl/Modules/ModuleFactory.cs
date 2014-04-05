@@ -14,18 +14,15 @@ namespace EZEtl.Modules
         public static IModule Create(IConfigurationParent parent,  XElement xmlItemModule, out string errorMessage)
         {
             errorMessage = string.Empty;
+            string attrNotFoundErrorMessage;
 
             if (xmlItemModule == null || string.IsNullOrWhiteSpace(xmlItemModule.ToString()))
-                throw new ArgumentNullException("xmlItemModule");      
+                throw new ArgumentNullException("xmlItemModule");
 
-            XAttribute idAttribute = xmlItemModule.Attribute(AttributeNameEnum.ID.ToString());
-            if (idAttribute == null || string.IsNullOrWhiteSpace( idAttribute.Value) )
-            {
-                errorMessage += "Attribute '" + AttributeNameEnum.ID.ToString() + "' is missing or empty; ";
-                // in the module ["
-                //    + xmlItemModule.ToString().Substring(1, Constant.XmlQuoteLength) + "]; ";
-            }
-
+            string idAttribute;
+            if (!XmlUtil.TryGetAttribute(xmlItemModule, AttributeNameEnum.ID, out idAttribute, out attrNotFoundErrorMessage))
+            { errorMessage += attrNotFoundErrorMessage + Constant.UserMessageSentenceDelimiter; }
+ 
             string moduleTypeString = xmlItemModule.Name.ToString();
             ModuleTypeEnum moduleType;
             if (!Enum.TryParse<ModuleTypeEnum>(moduleTypeString, out moduleType))
@@ -39,10 +36,10 @@ namespace EZEtl.Modules
            switch(moduleType)
            {
                case ModuleTypeEnum.DataFlow:
-                   return new DataFlow.DataFlowModule(parent, moduleType, idAttribute.Value, xmlItemModule);
+                   return new DataFlow.DataFlowModule(parent, moduleType, idAttribute, xmlItemModule);
 
                case ModuleTypeEnum.SqlNonQuery:
-                   return new SqlNonQueryModule(parent, moduleType, idAttribute.Value, xmlItemModule);
+                   return new SqlNonQueryModule(parent, moduleType, idAttribute, xmlItemModule);
 
                default:
                    throw new Utilities.AssertViolationException("Unexpected moduleType " + moduleType.ToString());

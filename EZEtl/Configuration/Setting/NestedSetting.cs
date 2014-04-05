@@ -8,7 +8,7 @@ using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Configuration.Setting
 {
-    public class NestedSetting : SettingBase, ISetting
+    public class NestedSetting : SettingBase
     {
        List<string> _unexpectedSettings              = new List<string>();
        Dictionary<SettingNameEnum, int> _settingCount = new Dictionary<SettingNameEnum, int>();
@@ -23,7 +23,7 @@ namespace EZEtl.Configuration.Setting
            return null;
        }
 
-       public object Value { get { return _settings; } }
+       public override object Value { get { return _settings; } }
 
        public IEnumerable<SettingNameEnum> SettingNameList
        {
@@ -37,7 +37,7 @@ namespace EZEtl.Configuration.Setting
        {
            get
            {
-               if (_errorMessage.Length > 0)
+               if (!base.IsValid)
                    return false;
 
                foreach (KeyValuePair<SettingNameEnum, ISetting> entry in _settings)
@@ -45,20 +45,18 @@ namespace EZEtl.Configuration.Setting
                    if (!entry.Value.IsValid)
                        return false;
                }
+               
                return true;
            }
        }
 
        public override void OutputDiagnostics()
        {
+           base.OutputDiagnostics();
+
            foreach (KeyValuePair<SettingNameEnum, ISetting> entry in _settings)
            {
                entry.Value.OutputDiagnostics();
-           }
-
-           if (_errorMessage.Length > 0)
-           {
-               Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
            }
        }
 
@@ -69,8 +67,8 @@ namespace EZEtl.Configuration.Setting
            _settingMaxOccurence.Add(setting.SettingName, maxOccurence);
        }
 
-      
-       public XElement RawValue
+
+       public override XElement RawValue
        {
             get { return _rawValue; } 
             set {
@@ -96,7 +94,7 @@ namespace EZEtl.Configuration.Setting
 
        protected virtual void Parse()
        {
-
+           _isValid = true; // Sets own valid flag for the nested setting, it just indicates that Parse has been called and NestedSetting has been initialized
            foreach (XElement item in _rawValue.Elements()) 
            {
                string itemName = item.Name.LocalName;

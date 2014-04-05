@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EzEtl>
- 	
+
+  <Variables>
+	<Variable ID="SpMessage" value="" />
+	<Variable ID="AdHocLoadReturnCode" value="-100" type="Int32" />
+  </Variables>
+
+ 
   <Modules>
+  
     <DataFlow ID="Upload">
       <Source ID="File">
         <FilePath>C:\temp\EzEtl\PipeOut_1-2-3.csv</FilePath>
@@ -20,6 +27,7 @@
 
     </DataFlow>
 	
+	
 	<SqlNonQuery ID="ProcessFeed">
 		<ConnectionStringName>MyLocalSql</ConnectionStringName>
         <DbOperationTimeout>1500</DbOperationTimeout>
@@ -27,13 +35,29 @@
 			<CommandText>dbo.AdHocLoad</CommandText>
 			<Argument>
 				<Name>FeedName</Name>
-				<Value>AdHocTest</Value>
+				<DbType>String</DbType>
+				<Size>255</Size>
+				<InputValue>AdHocTest</InputValue>
 				<Direction>INPUT</Direction>
 			</Argument>
 			<Argument>
 				<Name>FeedDate</Name>
-				<Value>2014-03-23</Value>
+				<InputValue>2014-03-23</InputValue>
+				<DbType>DateTime</DbType>
 				<Direction>INPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>Message</Name>
+				<DbType>String</DbType>
+				<Size>4000</Size>		
+				<OutputVariable>SpMessage</OutputVariable>
+				<Direction>OUTPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>RC</Name>
+				<DbType>Int32</DbType>
+				<OutputVariable>AdHocLoadReturnCode</OutputVariable>
+				<Direction>ReturnValue</Direction>
 			</Argument>
 		</Command>
 	</SqlNonQuery>
@@ -48,17 +72,15 @@
 			<Argument name="@StartDate" value="${StartDate}" direction="OUTPUT" />
 		</SqlNonQuery>
 	</SqlExec>
-	
-	
-			
+
+	<ExecuteModule ID="Upload" />
 	-->
+	
 	
   </Modules>
 
   <Workflow>
-	<ExecuteModule ID="Upload" />
 	<ExecuteModule ID="ProcessFeed" />
   </Workflow>
-  
-  
+ 
 </EzEtl>

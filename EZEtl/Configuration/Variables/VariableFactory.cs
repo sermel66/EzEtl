@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Text;
+using EZEtl.Configuration.Misc;
 
 namespace EZEtl.Configuration
 {
@@ -10,7 +11,7 @@ namespace EZEtl.Configuration
         public static IVariable Create(XElement item, out string errorMessage)
         {
             errorMessage=String.Empty;
-
+            string attrNotFoundErrorMessage;
             const string VariableItemName="Variable";
 
             if (item == null)
@@ -20,22 +21,23 @@ namespace EZEtl.Configuration
                 throw new ConfigurationException("Expected item name [" + VariableItemName + "], but encountered ["
                     + item.Name.ToString() + "]");
 
-            XAttribute variableIdAttribute = item.Attribute(AttributeNameEnum.ID.ToString());
-            XAttribute variableTypeNameAttribute = item.Attribute(AttributeNameEnum.type.ToString());
-            XAttribute variableValueAttribute = item.Attribute(AttributeNameEnum.value.ToString());
+            string variableId;// = item.Attribute(AttributeNameEnum.ID.ToString());
+            string variableTypeName;// = item.Attribute(AttributeNameEnum.type.ToString());
+            string variableValue;// = item.Attribute(AttributeNameEnum.value.ToString());
 
-            if (variableIdAttribute == null || String.IsNullOrWhiteSpace(variableIdAttribute.Value))
-                errorMessage += "Attribute " + AttributeNameEnum.ID.ToString() + " is missing or empty; ";
+            if (!XmlUtil.TryGetAttribute(item, AttributeNameEnum.ID, out variableId, out attrNotFoundErrorMessage))
+            { errorMessage += attrNotFoundErrorMessage + Constant.UserMessageSentenceDelimiter; }
 
-            if (variableValueAttribute == null )
-                errorMessage += "Attribute " + AttributeNameEnum.value.ToString() + " is missing; ";
-
+            if (!XmlUtil.TryGetAttribute(item, AttributeNameEnum.value, out variableValue, out attrNotFoundErrorMessage))
+            { errorMessage += attrNotFoundErrorMessage + Constant.UserMessageSentenceDelimiter; }
+                    
             SupportedVariableTypeEnum variableType;
-            if (variableTypeNameAttribute != null)
+
+            if (XmlUtil.TryGetAttribute(item, AttributeNameEnum.type, out variableTypeName, out attrNotFoundErrorMessage))
             {
-                if (!Enum.TryParse<SupportedVariableTypeEnum>(variableTypeNameAttribute.Value, out variableType))
+                if (!Enum.TryParse<SupportedVariableTypeEnum>(variableTypeName, out variableType))
                 {
-                    errorMessage += "Unsupported variable type [" + variableTypeNameAttribute.Value + "]; ";
+                    errorMessage += "Unsupported variable type [" + variableTypeName + "]; ";
                 }
             }
             else
@@ -49,25 +51,25 @@ namespace EZEtl.Configuration
             switch(variableType)
             {
                 case SupportedVariableTypeEnum.String:
-                    return new Variable<string>(variableIdAttribute.Value, variableType, variableValueAttribute.Value);
+                    return new Variable<string>(variableId, variableType, variableValue);
 
                 case SupportedVariableTypeEnum.Int32:
                     int valueInt;
-                    if (!Int32.TryParse(variableValueAttribute.Value, out valueInt))
+                    if (!Int32.TryParse(variableValue, out valueInt))
                     {
-                        errorMessage += "Could not convert value [" + variableValueAttribute.Value + "] to " + variableType.ToString();
+                        errorMessage += "Could not convert value [" + variableValue + "] to " + variableType.ToString();
                         return null;
                     }
-                    return new Variable<Int32>(variableIdAttribute.Value, variableType, valueInt);
+                    return new Variable<Int32>(variableId, variableType, valueInt);
 
                 case SupportedVariableTypeEnum.DateTime:
                     DateTime valueDateTime;
-                    if (!DateTime.TryParse(variableValueAttribute.Value, out valueDateTime))
+                    if (!DateTime.TryParse(variableValue, out valueDateTime))
                     {
-                        errorMessage += "Could not convert value [" + variableValueAttribute.Value + "] to " + variableType.ToString();
+                        errorMessage += "Could not convert value [" + variableValue + "] to " + variableType.ToString();
                         return null;
                     }
-                    return new Variable<DateTime>(variableIdAttribute.Value, variableType, valueDateTime);
+                    return new Variable<DateTime>(variableId, variableType, valueDateTime);
                 default:
                     throw new Exception("Unexpected variableType [" + variableType.ToString() + "]");
             }

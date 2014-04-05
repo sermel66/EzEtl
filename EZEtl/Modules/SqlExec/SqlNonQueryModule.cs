@@ -63,6 +63,7 @@ namespace EZEtl.Modules
         {
             string debugMessage;
             SimpleLog.ToLog(this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, SimpleLogEventType.Trace);
+            Dictionary<DbParameter,string> outputVariable = new Dictionary<DbParameter,string>();
 
             using (DbConnection connection = EZEtl.Modules.Util.DbProviderConnection.Create(_taskConfiguration))
             {
@@ -81,12 +82,24 @@ namespace EZEtl.Modules
                 foreach (NestedSetting argSetting in args)
                 {
                     DbParameter par = cmd.CreateParameter();
-                    par.DbType = DbType.String;
+                    par.DbType = (DbType) argSetting.GetSetting(SettingNameEnum.DbType).Value;
+
+                    ISetting sizeSetting=argSetting.GetSetting(SettingNameEnum.Size);
+                    if (sizeSetting.IsPresent)
+                        par.Size = (int)sizeSetting.Value;
+
                     par.ParameterName = argSetting.GetSetting(SettingNameEnum.Name).Value.ToString();
-                    par.Value = argSetting.GetSetting(SettingNameEnum.Value).Value.ToString();
                     par.Direction = (ParameterDirection)argSetting.GetSetting(SettingNameEnum.Direction).Value;
+                    
+                    ISetting inputValueSetting=argSetting.GetSetting(SettingNameEnum.InputValue);
+                    if (inputValueSetting.IsPresent)
+                        par.Value = inputValueSetting.Value;
 
                     cmd.Parameters.Add(par);
+
+                    ISetting outputVariableSetting = argSetting.GetSetting(SettingNameEnum.OutputVariable);
+                    if (outputVariableSetting.IsPresent)
+                       outputVariable.Add(par, outputVariableSetting.Value.ToString());
                 }
 
                 int rc=int.MinValue;
@@ -99,13 +112,23 @@ namespace EZEtl.Modules
                 {
                     Misc.Terminate.FatalError(ex.Message);
                 }
-                debugMessage = "SQL NonQuery [" + cmd.CommandText + "] returned code " + rc.ToString();
+
+                debugMessage = "SQL NonQuery [" + cmd.CommandText + "] has affected " + rc.ToString() + " rows";
                 SimpleLog.ToLog(debugMessage, SimpleLogEventType.Debug);
 
-                // TODO Output parameters
+                // Output parameters
+                foreach ( DbParameter par in outputVariable.Keys )
+                {
+                    string variableName = outputVariable[par];
 
-                // TODO workflow logic dependent on RC value
-            }
+                    debugMessage = "Non-Input parameter [" + par.ParameterName + "] populates variable [" + variableName + "] with value [" + par.Value.ToString() +"]";
+                    SimpleLog.ToLog(debugMessage, SimpleLogEventType.Debug);
+
+                    IVariable variable = Program.Configuration.GetVariable(variableName);
+                    variable.Value = par.Value;
+                }
+
+            } // end of connection
         }
     }
 }

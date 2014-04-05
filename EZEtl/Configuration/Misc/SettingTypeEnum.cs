@@ -5,6 +5,7 @@
         String,
         Int32, 
         DateTime,
+        DbType,
         ParameterDirection,
         NestedSetting
     }

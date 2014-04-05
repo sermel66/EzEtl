@@ -79,7 +79,9 @@ namespace EZEtl.Workflow
                     _errorMessage += missingAttributeName.ToString() + ", ";
                 }
 
-                _errorMessage = _errorMessage.Substring(1, _errorMessage.Length - 2);
+                if ( !string.IsNullOrEmpty(_errorMessage))
+                        _errorMessage = _errorMessage.Substring(0, _errorMessage.Length - 1);
+                
                 return;
             }
 

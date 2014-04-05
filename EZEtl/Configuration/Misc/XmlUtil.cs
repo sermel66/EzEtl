@@ -15,13 +15,20 @@ namespace EZEtl.Configuration.Misc
             XAttribute attribute = item.Attribute(attributeName.ToString());
             if ( attribute == null)
             {
-                errorMessage = "Attribute " + attributeName.ToString() + " not found in the Xml Element ["
-                     + item.ToString().Substring(1, Constant.XmlQuoteLength);
+                errorMessage = "Attribute " + attributeName.ToString() + " not found in the XML Element "
+                    + Quot(item.ToString());
                 return false;
             }
 
             attributeValue = attribute.Value;
             return true;
+        }
+
+        public static string Quot(string source)
+        {
+            return @"[" + source.Substring(0, Constant.XmlQuoteLength > source.Length ? source.Length : Constant.XmlQuoteLength)
+                 + (source.Length > Constant.XmlQuoteLength ? @"..." : string.Empty)
+                + @"]";
         }
     }
 }
