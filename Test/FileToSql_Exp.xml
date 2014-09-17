@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EzEtl>
+
+  <Variables>
+	<Variable ID="SpMessage" value="" />
+	<Variable ID="AdHocLoadReturnCode" value="-100" type="Int32" />
+	<Variable ID="FullyQualifiedFileName" value="Default" />
+	<Variable ID="DateNow" value="1900-01-01" type="DateTime" />
+  </Variables>
+ 
+  <Modules>
+  
+    <DataFlow ID="Upload">
+      <Source ID="File">
+        <FilePath>C:\temp\EzEtl\PipeOut_1-2-3.csv</FilePath>
+        <SchemaIniTemplate>=${ConfigFolder}\unicode.ini</SchemaIniTemplate>
+        <Encoding>ASCII</Encoding>
+		<BatchSizeRows>1000000</BatchSizeRows>
+      </Source>
+
+      <Destination ID="SqlBulk">
+        <ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <TableName>dbo.AdHoc2</TableName>
+		<ExistingDataAction>Truncate</ExistingDataAction>
+        <DbOperationTimeout>1500</DbOperationTimeout>
+		<OneDebugMessagePerBatchCount>1</OneDebugMessagePerBatchCount>
+      </Destination>
+
+    </DataFlow>
+	
+	
+	<SqlNonQuery ID="ProcessFeed">
+		<ConnectionStringName>MyLocalSql</ConnectionStringName>
+        <DbOperationTimeout>1500</DbOperationTimeout>
+		<Command>
+			<CommandText>dbo.AdHocLoad</CommandText>
+			<Argument>
+				<Name>FeedName</Name>
+				<DbType>String</DbType>
+				<Size>255</Size>
+				<InputValue>AdHocTest</InputValue>
+				<Direction>INPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>FeedDate</Name>
+				<InputValue>2014-03-23</InputValue>
+				<DbType>DateTime</DbType>
+				<Direction>INPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>Message</Name>
+				<DbType>String</DbType>
+				<Size>4000</Size>		
+				<OutputVariable>SpMessage</OutputVariable>
+				<Direction>OUTPUT</Direction>
+			</Argument>
+			<Argument>
+				<Name>RC</Name>
+				<DbType>Int32</DbType>
+				<OutputVariable>AdHocLoadReturnCode</OutputVariable>
+				<Direction>ReturnValue</Direction>
+			</Argument>
+		</Command>
+	</SqlNonQuery>
+	
+	<!--
+	<SqlExec ID="GetStartDate">
+		 <ConnectionStringName>MyLocalSql</ConnectionStringName>
+		 <SqlNonQuery command="dbo.StartDate">
+			<Argument name="@FeedName" value="${FeedName}" direction="INPUT" />
+			<Argument name="@StartDate" value="${StartDate}" direction="OUTPUT" />
+		</SqlNonQuery>
+	</SqlExec>
+
+	<ExecuteModule ID="Upload" />
+	   <SetVariable ID="FullyQualifiedFileName">'C:\\temp\\PipeTest_' + #Now#.ToString('yyyy/MM/dd hh:mm:ss')+ '.csv'</SetVariable>
+<ExecuteModule ID="ProcessFeed" />
+	-->
+  </Modules>
+
+  <Workflow>
+    <SetVariable ID="FullyQualifiedFileName">"ABCD"</SetVariable>
+    <SetVariable ID="DateNow">#12/31/2010#</SetVariable>
+    <SetVariable ID="DateNow">DateTime.Now</SetVariable>
+	<SetVariable ID="DateNow">DateTime.UtcNow</SetVariable>
+	<SetVariable ID="FullyQualifiedFileName">FullyQualifiedFileName + DateNow.ToString("yyyy_MM_dd")</SetVariable>
+	
+  </Workflow>
+ 
+</EzEtl>

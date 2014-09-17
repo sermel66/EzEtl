@@ -40,6 +40,9 @@
     <StartupObject>EZEtl.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ciloci.Flee">
+      <HintPath>..\..\..\Flee\Flee-0.9.26.0\src\Lib\bin\Debug\Ciloci.Flee.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -64,7 +67,6 @@
     <Compile Include="Configuration\Misc\IDiagnosable.cs" />
     <Compile Include="Configuration\Misc\IConfigurationParent.cs" />
     <Compile Include="Configuration\Misc\AppConfig.cs" />
-    <Compile Include="Configuration\Misc\MessageSeverityEnum.cs" />
     <Compile Include="Configuration\Misc\ModuleTypeEnum.cs" />
     <Compile Include="Configuration\Misc\SettingNameEnum.cs" />
     <Compile Include="Configuration\Misc\SettingTypeEnum.cs" />
@@ -75,18 +77,19 @@
     <Compile Include="Configuration\Setting\SettingValidatorBase.cs" />
     <Compile Include="Configuration\Setting\StoredProcedureArgumentSettingList.cs" />
     <Compile Include="Configuration\Variables\VariableNameCheck.cs" />
+    <Compile Include="Expressions\Flee.cs" />
     <Compile Include="Misc\Terminate.cs" />
     <Compile Include="Configuration\Misc\XmlUtil.cs" />
     <Compile Include="Configuration\Setting\ISetting.cs" />
     <Compile Include="Configuration\TaskConfiguration\ITaskConfiguration.cs" />
-    <Compile Include="Expressions\Arithmetic.cs" />
-    <Compile Include="Expressions\ArithmeticExpressionEnum.cs" />
-    <Compile Include="Expressions\Combo.cs" />
-    <Compile Include="Expressions\DateAdd.cs" />
-    <Compile Include="Expressions\ExpressionBase.cs" />
-    <Compile Include="Expressions\ExpressionFactory.cs" />
-    <Compile Include="Expressions\IExpression.cs" />
-    <Compile Include="Expressions\OperandEnum.cs" />
+    <None Include="Expressions\Arithmetic.cs" />
+    <None Include="Expressions\ArithmeticExpressionEnum.cs" />
+    <None Include="Expressions\Combo.cs" />
+    <None Include="Expressions\DateAdd.cs" />
+    <None Include="Expressions\ExpressionBase.cs" />
+    <None Include="Expressions\ExpressionFactory.cs" />
+    <None Include="Expressions\IExpression.cs" />
+    <None Include="Expressions\OperandEnum.cs" />
     <Compile Include="Modules\CompositeModule.cs" />
     <Compile Include="Modules\DataFlow\DataFlowModule.cs" />
     <Compile Include="Modules\DataFlow\Destination\DestinationTaskEnum.cs" />

@@ -14,7 +14,7 @@
 //        public virtual void OutputDiagnostics()
 //        {
 //            if (_errorMessage.Length > 0)
-//                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+//                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, _errorMessage);
 //        }
 
 //        public virtual bool IsValid { get { return string.IsNullOrWhiteSpace(_errorMessage); } }

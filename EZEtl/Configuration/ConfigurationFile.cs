@@ -71,7 +71,7 @@ namespace EZEtl.Configuration
         {
             foreach (string errorMessage in _errorMessages)
             {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, errorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, errorMessage);
             }
 
             foreach ( IDiagnosable module in _modules.Values)

@@ -30,11 +30,22 @@ namespace EZEtl.Workflow
                 return;
             }
 
+           
+            if (! Expressions.Flee.CompileDynamicExpression(_expression, out _errorMessage) )
+            {
+                return;
+            }
+            
+          
+
         }
 
         public void Execute(params object[] args)
         {
-          _variable.Value = _expression; // TODO expression evaluation
+
+            _variable.Value = Expressions.Flee.EvaluateExpresion(_expression);
+            this.ToLog ( Utilities.SimpleLogEventType.Debug, "Variable assigned value [" + _variable.Value.ToString() + "]");
+         
         }
     }
 }

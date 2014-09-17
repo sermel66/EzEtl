@@ -74,12 +74,12 @@ namespace EZEtl.Configuration
 
             if (_errorMessage.Length > 0)
             {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, _errorMessage);
             }
 
             if (_needsInstantiator && _instantiator == null)
             {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Instantiator not set");
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, "Instantiator not set");
             }
         }
 

@@ -37,10 +37,10 @@ namespace EZEtl.Modules
         public void OutputDiagnostics()
         {
             if ( TaskConfigurationList.Count < 1 )
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "No tasks configured in the module");
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, "No tasks configured in the module");
 
             if ( !string.IsNullOrWhiteSpace( _errorMessage) )
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _errorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, _errorMessage);
 
             foreach (TaskConfiguration tc in TaskConfigurationList)
             {

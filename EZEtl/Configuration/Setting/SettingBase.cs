@@ -38,16 +38,16 @@ namespace EZEtl.Configuration.Setting
         public virtual void OutputDiagnostics()
         {
             if ( ! (_isOptional || _isPresent))
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, "Required setting is not provided");
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, "Required setting is not provided");
 
            foreach(string errorMessage in _errorMessageList)
            {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, errorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, errorMessage);
             }
 
             if (!_validator.Validate())
             {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, _validator.ErrorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, _validator.ErrorMessage);
             }
         }
 

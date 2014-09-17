@@ -11,6 +11,10 @@ namespace EZEtl.Configuration.Misc
 
         string _configurationHierarchy;
         public string ConfigurationHierarchy { get { return _configurationHierarchy; } }
+        public void ToLog( Utilities.SimpleLogEventType severity, string message)
+        {
+            Diagnostics.Output(this.ConfigurationHierarchy, severity, message);
+        }
 
         public ConfigurationParentBase ( IConfigurationParent parent, string child )
         {

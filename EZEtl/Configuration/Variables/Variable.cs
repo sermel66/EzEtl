@@ -16,15 +16,15 @@ namespace EZEtl.Configuration
         SupportedVariableTypeEnum _variableTypeName;
         public SupportedVariableTypeEnum VariableTypeName { get { return _variableTypeName; } }
 
-        T _value;
-        public T TypedValue { get { return _value; } set { _value = value; } }
+    //    T _value;
+        public T TypedValue { get { return (T) Expressions.Flee.Variable(_name); } set { Expressions.Flee.SetVariable(_name, value); } }
         public object Value
         {
-            get { return _value; }
+            get { return Expressions.Flee.Variable(_name); }
             set
             {
                 if (value is T)
-                    _value = (T)value;
+                    Expressions.Flee.SetVariable(_name,  (T)value);
                 else
                 {
                     EZEtl.Misc.Terminate.FatalError("Attempt to assign variable " + Name + " of type " + VariableTypeName + " value of type "
@@ -43,8 +43,9 @@ namespace EZEtl.Configuration
 
             _name = name;
             _variableTypeName = variableTypeName;
-            _value = value;
-            _type = typeof(T);
+           _type = typeof(T);
+           Expressions.Flee.SetVariable(_name, (T)value);
+
         }
     }
 }

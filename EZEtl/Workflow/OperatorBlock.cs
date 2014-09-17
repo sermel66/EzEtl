@@ -25,7 +25,7 @@ namespace EZEtl.Workflow
 
             foreach (string errorMessage in _errorMessages)
             {
-                Diagnostics.Output(this.ConfigurationHierarchy, MessageSeverityEnum.Error, errorMessage);
+                Diagnostics.Output(this.ConfigurationHierarchy, Utilities.SimpleLogEventType.Error, errorMessage);
             }
         }
 
@@ -58,43 +58,48 @@ namespace EZEtl.Workflow
         {
             OperatorEnum operatorType;
 
-
+            int operatorCounter = 0;
             foreach (XElement element in workflowBlock.Elements())
             {
+                operatorCounter++;
+
                 string operatorTypeString = element.Name.ToString();
                 if (!Enum.TryParse<OperatorEnum>(operatorTypeString, out operatorType))
                 {
                     _errorMessages.Add("Unexpected operator " + operatorTypeString + " encountered");
                     continue;
                 }
-                 
-                XAttribute idAttribute = element.Attribute(AttributeNameEnum.ID.ToString());
-                if (idAttribute==null)
+                
+                string ID, errorMessage;
+                if ( !XmlUtil.TryGetAttribute(element,AttributeNameEnum.ID,out ID, out errorMessage) )
                 {
-                    _errorMessages.Add("Attribute " + AttributeNameEnum.ID.ToString() + " is missing in the operator " + element.ToString());
+                    _errorMessages.Add(errorMessage);
                     continue;
                 }
-                
 
                 IOperator newOperator;
                 switch ( operatorType)
                 {
                     case OperatorEnum.ExecuteModule:
-                        newOperator = new ExecuteModule(_scopeConfigurationFile, this, operatorType.ToString(), idAttribute.Value);
+                        newOperator = new ExecuteModule(_scopeConfigurationFile, this, operatorType.ToString(), ID);
                         break;
 
                     case OperatorEnum.SetVariable:
-                       XAttribute valueAttribute = element.Attribute(AttributeNameEnum.value.ToString());
-                        if ( valueAttribute == null)
+                        string expression = element.Value;
+                        if ( string.IsNullOrWhiteSpace(expression))
                         {
-                            _errorMessages.Add("Attribute " + AttributeNameEnum.value.ToString() + " is missing in the operator " + element.ToString());
+                            _errorMessages.Add(
+                                  "Expression is missing in the operator # " 
+                                + operatorCounter.ToString() + " " 
+                                + XmlUtil.Quot(element.ToString())
+                                );
                             continue;
                         }
-                        newOperator = new SetVariable(_scopeConfigurationFile,  this, operatorType.ToString(), idAttribute.Value, valueAttribute.Value);
+                        newOperator = new SetVariable(_scopeConfigurationFile,  this, operatorType.ToString(), ID, expression);
                         break;
 
                     case OperatorEnum.ForLoop:
-                        newOperator = new ForLoop(_scopeConfigurationFile, this, operatorType.ToString(), idAttribute.Value, element);
+                        newOperator = new ForLoop(_scopeConfigurationFile, this, operatorType.ToString(), ID, element);
                         break;
                     default:
                         throw new System.NotImplementedException("Operator type " + operatorType);

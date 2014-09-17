@@ -1,0 +1,88 @@
+Configure files:
+*.ctl
+*.log
+*.dmp
+*.bad
+
+Generating Dump
+
+checks for string length this way:
+System.Text.Encoding.UTF8.GetByteCount(cellValue.ToString());
+
+If not NULL or empty, keep record of max length of each column
+
+DateTime gets special treatment. Both Column type and cell value type must be DateTime
+if ( col.DataType.FullName.Equals("System.DateTime") 
+       &&
+	 cellValue.GetType().ToString().Equals("System.DateTime")
+	)
+{	
+   OutputDateFormat="dd-MM-yyyy HH:mm:ss";
+   cell=((DateTime)(cellValue)).ToString(OutputDateFormat,..InvariantCulture)
+}
+else
+{
+	replaceQuot=quot+quot;
+	cell=quot + cellValue.ToString().Replace(quot, replaceQuot) + quot;
+	}
+	Delimiter is "|";
+}
+
+Delimiter after each cell; One extra delimiter at the row end - comment says file is rejected otherwise
+
+>> Dumping the data file first provides us with the column width. Now, create CTL file
+
+
+OPTIONS(SILENT=(FEEDBACK),DIRECT=FALSE,PARALLEL=TRUE,ROWS=30000,BINDSIZE=1048576)
+load data
+CHARACTERSET UTF8
+infile 'c:\temp\file.dmp  "str X'7C0D0A'" 
+into table dbo.StageTable
+fields terminated by "|" optionally enclosed by '"'
+(
+ <ColumnName> TIMESTAMP "DD-MM-YYYY HH24:MI:SS"
+ <ColumnName> CHAR(<LEN>)
+ <ColumnName>
+)
+
+>> Command 
+<SQL LOADER PATH>  login/password@dbserver control=fsdfsd.ctl,log=fdsfdsf.log
+
+
+
+--============================= Calling external process =============================
+using System.Diagnostics;
+
+Constructor:
+
+System.Diagnostics.Process p = new...();
+p.StartInfo = new ProcessStartInfo(path,arguments);
+p.StartInfo.UseShellExecute = false;
+p.StartInfo.RedirectStandardOutput = true;
+p.OutputDataReceived += new DataReceivedEventHandler(this.StdOutDataHandler);
+p.StartInfo.RedirectStandardError = true;
+p.ErrorDataReceived += new DataReceivedEventHandler(this.StdErrorDataHandler);
+
+Method Run:
+p.Start();
+p.BeginOutputReadLine();
+p.BeginErrorReadLine();
+p.WaitForExit();
+int exitCode = p.ExitCode;
+p.Close();
+
+Method void StdOutDataHandler (object sendingProcess, DataReceivedEventArgs outLine)
+{
+  this.stdOutput.Append(outLine.Data + Environment.NewLine);
+}
+
+
+
+
+
+
+
+
+
+
+

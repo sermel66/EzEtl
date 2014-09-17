@@ -190,7 +190,7 @@ namespace EZEtl
 
                     if (Configuration.OuterWorkflowOperatorBlock == null)
                     {
-                        Diagnostics.Output(programName, MessageSeverityEnum.Error, "Configuration section " + TopLevelItemEnum.Workflow.ToString() + " is missing" );
+                        Diagnostics.Output(programName, Utilities.SimpleLogEventType.Error, "Configuration section " + TopLevelItemEnum.Workflow.ToString() + " is missing" );
                         return ExitCodes.Failure;
                     }
 
